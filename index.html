@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Who Wants to Be a Millionaire – Supply Chain Edition</title>
+    <style>
+        /* ----- RESET & BASE ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a12;
+            color: #f0e9d8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.8s ease;
+            overflow: hidden;
+        }
+        /* ----- APP CONTAINER (now fullscreen) ----- */
+        #app {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+            box-shadow: none;
+            background: radial-gradient(ellipse at 50% 40%, #1a3e1a 0%, #0a0a12 70%);
+            transition: background 0.8s ease;
+        }
+        /* ----- THEME VARIABLES (set by JS) ----- */
+        .theme-supplier {
+            --primary: #1a237e;
+            --primary-light: #283593;
+            --primary-glow: rgba(26, 35, 126, 0.6);
+            --accent: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.5);
+            --card-bg: rgba(26, 35, 126, 0.25);
+            --border-glow: #ffd700;
+            --text-accent: #ffd700;
+            --identity-label: 'Supplier';
+        }
+        .theme-distributor {
+            --primary: #1b5e20;
+            --primary-light: #2e7d32;
+            --primary-glow: rgba(27, 94, 32, 0.6);
+            --accent: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.5);
+            --card-bg: rgba(27, 94, 32, 0.25);
+            --border-glow: #ffd700;
+            --text-accent: #ffd700;
+            --identity-label: 'Distributor';
+        }
+        .theme-buyer {
+            --primary: #b71c1c;
+            --primary-light: #c62828;
+            --primary-glow: rgba(183, 28, 28, 0.6);
+            --accent: #ffd700;
+            --accent-glow: rgba(255, 215, 0, 0.5);
+            --card-bg: rgba(183, 28, 28, 0.25);
+            --border-glow: #ffd700;
+            --text-accent: #ffd700;
+            --identity-label: 'Buyer';
+        }
+
+        /* ----- COMMON ELEMENTS ----- */
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 12rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: scale(0.96);
+        }
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
+
+        .btn {
+            padding: 16px 48px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-transform: uppercase;
+            background: linear-gradient(145deg, #ffd700, #f9a825);
+            color: #1a1a2e;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 8px 60px rgba(255, 215, 0, 0.8), 0 0 120px rgba(255, 215, 0, 0.2); }
+        }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.04);
+            box-shadow: 0 12px 60px rgba(255, 215, 0, 0.9) !important;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-secondary {
+            background: linear-gradient(145deg, #424242, #212121);
+            color: #f0e9d8;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            animation: none;
+        }
+        .btn-secondary:hover {
+            box-shadow: 0 12px 48px rgba(255, 215, 0, 0.2);
+        }
+
+        .identity-label {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+        .identity-label::after {
+            content: var(--identity-label, '');
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .score-display {
+            position: absolute;
+            top: 28px;
+            right: 32px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: 1px solid var(--accent);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .score-display .currency {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* ----- LANDING SCREEN ---- */
+        #landing {
+            background: radial-gradient(ellipse at 50% 40%, #1e4a1e, #0d1f0d);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Sparkle field (unchanged) */
+        #sparkle-field {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .spark {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffd700, #f57f17);
+            box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.4);
+            animation: sparkleAnim 2s ease-in-out infinite alternate;
+            opacity: 0;
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0.8) rotate(360deg); opacity: 0.6; }
+        }
+
+        /* Content wrapper – perfectly centered */
+        #landing .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            /* Flex centering is handled by #landing itself, so no extra transform needed */
+        }
+
+        #landing .game-title {
+            font-size: clamp(2.8rem, 10vw, 5.6rem);
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #ffd700;
+            text-shadow:
+                0 0 30px rgba(255, 215, 0, 0.6),
+                0 0 60px rgba(255, 215, 0, 0.3),
+                0 0 120px rgba(255, 215, 0, 0.15),
+                0 10px 40px rgba(0, 0, 0, 0.8);
+            animation: floatTitle 6s ease-in-out infinite;
+            line-height: 1.2;
+            margin-bottom: 0.3rem;
+        }
+
+        @keyframes floatTitle {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .game-title::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 4px;
+            margin: 12px auto 0;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            border-radius: 4px;
+            box-shadow: 0 0 30px #ffd700;
+        }
+
+        #landing .sub-title {
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: #b8b0a0;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        #landing .tagline {
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            color: #9e9688;
+            margin-bottom: 2.5rem;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        #landing .btn {
+            font-size: 1.6rem;
+            padding: 18px 64px;
+        }
+
+        /* ----- IDENTITY SCREEN ----- */
+        #identity-select {
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a12 100%);
+        }
+        #identity-select .identity-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 2;
+            position: relative;
+        }
+        .identity-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            padding: 2.5rem 2.8rem;
+            min-width: 180px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .identity-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 28px;
+            padding: 2px;
+            background: linear-gradient(145deg, rgba(255, 215, 0, 0.2), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .identity-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 16px 60px rgba(255, 215, 0, 0.15);
+        }
+        .identity-card:active {
+            transform: scale(0.96);
+        }
+        .identity-card .icon {
+            font-size: 3.6rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .identity-card .name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #f0e9d8;
+        }
+        .identity-card .desc {
+            font-size: 0.85rem;
+            color: #a09888;
+            margin-top: 0.4rem;
+            letter-spacing: 0.5px;
+        }
+        .identity-card.supplier .icon {
+            color: #5c6bc0;
+        }
+        .identity-card.distributor .icon {
+            color: #66bb6a;
+        }
+        .identity-card.buyer .icon {
+            color: #ef5350;
+        }
+
+        .identity-card.supplier:hover {
+            border-color: #5c6bc0;
+            box-shadow: 0 16px 60px rgba(92, 107, 192, 0.2);
+        }
+        .identity-card.distributor:hover {
+            border-color: #66bb6a;
+            box-shadow: 0 16px 60px rgba(102, 187, 106, 0.2);
+        }
+        .identity-card.buyer:hover {
+            border-color: #ef5350;
+            box-shadow: 0 16px 60px rgba(239, 83, 80, 0.2);
+        }
+
+        /* ----- QUESTION NUMBER SCREEN ----- */
+        #question-number {
+            background: radial-gradient(ellipse at 50% 30%, var(--primary-light) 0%, var(--primary) 60%, #0a0a12 100%);
+        }
+        #question-number .number-display {
+            font-size: clamp(8rem, 25vw, 16rem);
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 80px var(--accent-glow), 0 0 160px var(--primary-glow);
+            animation: pulseNumber 2s ease-in-out infinite;
+            line-height: 1;
+        }
+        @keyframes pulseNumber {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.04);
+                opacity: 0.9;
+            }
+        }
+        #question-number .q-label {
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 1rem;
+        }
+        #question-number .deco-line {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 1.2rem auto;
+        }
+        #question-number .btn {
+            margin-top: 2.5rem;
+        }
+
+        /* ----- CHOICES SCREEN ----- */
+        #choices {
+            background: radial-gradient(ellipse at 50% 30%, var(--primary-light) 0%, var(--primary) 60%, #0a0a12 100%);
+        }
+        #choices .question-text {
+            font-size: clamp(1.2rem, 2.8vw, 2.2rem);
+            font-weight: 600;
+            text-align: center;
+            max-width: 80%;
+            margin-bottom: 2.5rem;
+            line-height: 1.5;
+            color: #f0e9d8;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+        #choices .choices-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            max-width: 800px;
+            width: 90%;
+        }
+        .choice-btn {
+            padding: 18px 24px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(8px);
+            color: #f0e9d8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .choice-btn .letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 215, 0, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+        .choice-btn:active {
+            transform: scale(0.97);
+        }
+        .choice-btn .text {
+            flex: 1;
+        }
+        .choice-btn.correct {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.25);
+            box-shadow: 0 0 40px rgba(76, 175, 80, 0.2);
+        }
+        .choice-btn.correct .letter {
+            background: #4caf50;
+            color: #fff;
+        }
+        .choice-btn.wrong {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.25);
+            box-shadow: 0 0 40px rgba(244, 67, 54, 0.2);
+        }
+        .choice-btn.wrong .letter {
+            background: #f44336;
+            color: #fff;
+        }
+        .choice-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .choice-btn.disabled:hover {
+            transform: none;
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.45);
+        }
+        .choice-btn.reveal-correct {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.15);
+        }
+        .choice-btn.reveal-correct .letter {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        /* ----- RESULT SCREEN ----- */
+        #result {
+            background: radial-gradient(ellipse at 50% 30%, var(--primary-light) 0%, var(--primary) 60%, #0a0a12 100%);
+        }
+        #result .result-icon {
+            font-size: 5rem;
+            margin-bottom: 0.5rem;
+            animation: resultPop 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        @keyframes resultPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.3);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        #result .result-title {
+            font-size: clamp(2rem, 5vw, 3.6rem);
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 0.3rem;
+        }
+        #result .result-title.correct {
+            color: #4caf50;
+        }
+        #result .result-title.wrong {
+            color: #f44336;
+        }
+        #result .result-explanation {
+            max-width: 620px;
+            text-align: center;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #d0c8b8;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.2rem 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            margin: 0.8rem 0 1.8rem;
+        }
+        #result .score-change {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 0.2rem;
+        }
+        #result .btn {
+            margin-top: 0.5rem;
+        }
+
+        /* ----- FINAL SCREEN ----- */
+        #final {
+            background: radial-gradient(ellipse at 50% 30%, var(--primary-light) 0%, var(--primary) 60%, #0a0a12 100%);
+        }
+        #final .final-title {
+            font-size: clamp(2.4rem, 6vw, 4.2rem);
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: var(--accent);
+            text-shadow: 0 0 60px var(--accent-glow);
+            margin-bottom: 0.5rem;
+        }
+        #final .final-sub {
+            font-size: 1.2rem;
+            color: #b0a898;
+            letter-spacing: 2px;
+            margin-bottom: 1.2rem;
+        }
+        #final .final-score-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent);
+            border-radius: 24px;
+            padding: 2rem 4rem;
+            margin: 1rem 0 1.8rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 60px var(--accent-glow);
+        }
+        #final .final-score-box .amount {
+            font-size: clamp(3.2rem, 8vw, 5.6rem);
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: 2px;
+        }
+        #final .final-score-box .label {
+            font-size: 1rem;
+            color: #b0a898;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 0.2rem;
+        }
+        #final .final-identity {
+            font-size: 1.3rem;
+            color: #d0c8b8;
+            margin-bottom: 0.2rem;
+        }
+        #final .final-identity span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+        #final .final-congrats {
+            font-size: 1.1rem;
+            color: #b0a898;
+            max-width: 500px;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        #final .btn {
+            padding: 14px 48px;
+            font-size: 1.2rem;
+        }
+
+        /* ----- DECORATIVE ELEMENTS (corners only) ----- */
+        .deco-corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 215, 0, 0.08);
+            pointer-events: none;
+        }
+        .deco-corner.tl {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+        .deco-corner.tr {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+        .deco-corner.bl {
+            bottom: 20px;
+            left: 20px;
+            border-right: none;
+            border-top: none;
+        }
+        .deco-corner.br {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 768px) {
+            .screen {
+                padding: 1.2rem;
+            }
+            #choices .choices-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                width: 95%;
+            }
+            .choice-btn {
+                padding: 14px 18px;
+                font-size: 0.95rem;
+            }
+            .identity-card {
+                padding: 1.8rem 1.6rem;
+                min-width: 130px;
+            }
+            .identity-card .icon {
+                font-size: 2.6rem;
+            }
+            .identity-card .name {
+                font-size: 1.2rem;
+            }
+            .score-display {
+                top: 14px;
+                right: 16px;
+                font-size: 0.9rem;
+                padding: 4px 14px;
+            }
+            #result .result-explanation {
+                font-size: 0.9rem;
+                padding: 1rem 1.2rem;
+            }
+            #final .final-score-box {
+                padding: 1.2rem 2rem;
+            }
+            .deco-corner {
+                display: none;
+            }
+        }
+        @media (max-width: 480px) {
+            #landing .game-title {
+                font-size: 2.4rem;
+                letter-spacing: 2px;
+            }
+            #landing .sub-title {
+                font-size: 0.8rem;
+                letter-spacing: 4px;
+            }
+            #landing .btn {
+                font-size: 1.2rem;
+                padding: 14px 36px;
+            }
+            .identity-grid {
+                gap: 1rem;
+            }
+            .identity-card {
+                min-width: 100px;
+                padding: 1.2rem 1rem;
+            }
+            .identity-card .icon {
+                font-size: 2rem;
+            }
+            .identity-card .name {
+                font-size: 1rem;
+            }
+            #question-number .number-display {
+                font-size: 6rem;
+            }
+            #choices .question-text {
+                font-size: 1rem;
+                max-width: 95%;
+            }
+            .choice-btn .letter {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            .score-display {
+                font-size: 0.75rem;
+                padding: 4px 10px;
+                top: 10px;
+                right: 10px;
+            }
+            #final .final-score-box .amount {
+                font-size: 2.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="theme-distributor">
+        <!-- DECORATIVE CORNERS -->
+        <div class="deco-corner tl"></div>
+        <div class="deco-corner tr"></div>
+        <div class="deco-corner bl"></div>
+        <div class="deco-corner br"></div>
+
+        <!-- SCORE (visible during game) -->
+        <div class="score-display" id="scoreDisplay" style="display:none;">
+            <span class="currency">HK$</span>
+            <span id="scoreAmount">0</span>
+        </div>
+
+        <!-- ===== LANDING ===== -->
+        <div class="screen active" id="landing">
+            <div class="bg-glow"></div>
+            <div id="sparkle-field"></div>
+            <div class="content">
+                <div class="sub-title">Supply Chain Edition</div>
+                <div class="game-title">Who Wants to Be<br />a Millionaire?</div>
+                <div class="tagline">⚡ Test your knowledge &amp; win big ⚡</div>
+                <button class="btn" id="btnStart">▶ &nbsp;Start</button>
+            </div>
+        </div>
+
+        <!-- ===== IDENTITY SELECT ===== -->
+        <div class="screen" id="identity-select">
+            <div style="text-align:center; margin-bottom:2rem; z-index:2; position:relative;">
+                <div style="font-size:1rem; letter-spacing:6px; text-transform:uppercase; color:#9e9688; margin-bottom:0.3rem;">Choose Your Path</div>
+                <div style="font-size:clamp(1.6rem,4vw,2.8rem); font-weight:700; color:#f0e9d8;">Select Your Identity</div>
+            </div>
+            <div class="identity-grid">
+                <div class="identity-card supplier" data-identity="supplier">
+                    <span class="icon">🏭</span>
+                    <div class="name">Supplier</div>
+                    <div class="desc">Source &amp; provide materials</div>
+                </div>
+                <div class="identity-card distributor" data-identity="distributor">
+                    <span class="icon">🚚</span>
+                    <div class="name">Distributor</div>
+                    <div class="desc">Deliver &amp; distribute goods</div>
+                </div>
+                <div class="identity-card buyer" data-identity="buyer">
+                    <span class="icon">🛒</span>
+                    <div class="name">Buyer</div>
+                    <div class="desc">Purchase &amp; procure products</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== QUESTION NUMBER ===== -->
+        <div class="screen" id="question-number">
+            <div style="text-align:center; z-index:2; position:relative;">
+                <div class="identity-label" id="qnIdentityLabel"></div>
+                <div class="number-display" id="qnNumber">1</div>
+                <div class="q-label">Question</div>
+                <div class="deco-line"></div>
+                <button class="btn" id="btnShowChoices">Next &nbsp;→</button>
+            </div>
+        </div>
+
+        <!-- ===== CHOICES ===== -->
+        <div class="screen" id="choices">
+            <div style="text-align:center; width:100%; display:flex; flex-direction:column; align-items:center; z-index:2; position:relative;">
+                <div class="identity-label" id="chIdentityLabel"></div>
+                <div class="question-text" id="chQuestion"></div>
+                <div class="choices-grid" id="choicesGrid"></div>
+            </div>
+        </div>
+
+        <!-- ===== RESULT ===== -->
+        <div class="screen" id="result">
+            <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
+                <div class="identity-label" id="resIdentityLabel"></div>
+                <div class="result-icon" id="resIcon">✅</div>
+                <div class="result-title" id="resTitle">Correct!</div>
+                <div class="score-change" id="resScoreChange">+ HK$200,000</div>
+                <div class="result-explanation" id="resExplanation">Explanation here.</div>
+                <button class="btn" id="btnNextQuestion">Next Question →</button>
+            </div>
+        </div>
+
+        <!-- ===== FINAL ===== -->
+        <div class="screen" id="final">
+            <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
+                <div class="final-title">🏆 You Did It!</div>
+                <div class="final-sub">Congratulations on completing the challenge</div>
+                <div class="final-score-box">
+                    <div class="label">Your Prize</div>
+                    <div class="amount" id="finalAmount">HK$0</div>
+                </div>
+                <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
+                <div class="final-congrats" id="finalCongrats">You've shown exceptional knowledge in the supply chain world!</div>
+                <button class="btn" id="btnPlayAgain">🔄 &nbsp;Play Again</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================================
+        //  SOUND ENGINE  (Web Audio API)
+        // ============================================================
+        const Sound = (() => {
+            let ctx = null;
+
+            function getCtx() {
+                if (!ctx) {
+                    try {
+                        ctx = new(window.AudioContext || window.webkitAudioContext)();
+                    } catch (_) { return null; }
+                }
+                return ctx;
+            }
+
+            function playTone(freq, duration, type = 'sine', volume = 0.3) {
+                const c = getCtx();
+                if (!c) return;
+                try {
+                    const osc = c.createOscillator();
+                    const gain = c.createGain();
+                    osc.type = type;
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(volume, c.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(c.destination);
+                    osc.start(c.currentTime);
+                    osc.stop(c.currentTime + duration);
+                } catch (_) {}
+            }
+
+            function playChord(notes, durations, type = 'sine', volume = 0.25) {
+                const c = getCtx();
+                if (!c) return;
+                try {
+                    notes.forEach((freq, i) => {
+                        const osc = c.createOscillator();
+                        const gain = c.createGain();
+                        osc.type = type;
+                        osc.frequency.value = freq;
+                        const dur = durations[i] || 0.15;
+                        gain.gain.setValueAtTime(volume * 0.7, c.currentTime + i * 0.08);
+                        gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + i * 0.08 + dur);
+                        osc.connect(gain);
+                        gain.connect(c.destination);
+                        osc.start(c.currentTime + i * 0.08);
+                        osc.stop(c.currentTime + i * 0.08 + dur);
+                    });
+                } catch (_) {}
+            }
+
+            return {
+                click() { playTone(880, 0.08, 'sine', 0.2); },
+                startGame() {
+                    playChord([523, 659, 784, 1047], [0.15, 0.15, 0.15, 0.3], 'sine', 0.25);
+                },
+                correct() {
+                    playChord([523, 659, 784, 1047], [0.12, 0.12, 0.12, 0.25], 'sine', 0.3);
+                    setTimeout(() => {
+                        playChord([1047, 1319, 1568], [0.15, 0.15, 0.25], 'sine', 0.2);
+                    }, 300);
+                },
+                wrong() {
+                    playChord([523, 440, 349, 262], [0.2, 0.2, 0.2, 0.35], 'sine', 0.25);
+                },
+                final() {
+                    const notes = [523, 659, 784, 1047, 1319, 1568, 2093];
+                    notes.forEach((f, i) => {
+                        setTimeout(() => {
+                            playTone(f, 0.2, 'sine', 0.2);
+                        }, i * 80);
+                    });
+                    setTimeout(() => {
+                        playChord([1568, 2093, 2637], [0.2, 0.2, 0.35], 'sine', 0.25);
+                    }, notes.length * 80 + 100);
+                },
+                transition() { playTone(660, 0.1, 'sine', 0.15); },
+                selectIdentity() { playTone(523, 0.12, 'sine', 0.2);
+                    setTimeout(() => playTone(784, 0.12, 'sine', 0.2), 120); },
+            };
+        })();
+
+        // ============================================================
+        //  GAME DATA
+        // ============================================================
+        const QUESTIONS = [{
+            question: 'What is the primary role of a supplier in a supply chain?',
+            choices: [
+                'Delivering products to end consumers',
+                'Providing raw materials or products to other businesses',
+                'Managing inventory for retail stores',
+                'Transporting goods between warehouses'
+            ],
+            correct: 1,
+            explanation: 'Suppliers are the starting point of the supply chain, providing raw materials or finished products to businesses further down the chain.'
+        }, {
+            question: 'Which activity is a key responsibility of a distributor?',
+            choices: [
+                'Manufacturing products from raw materials',
+                'Designing marketing campaigns for products',
+                'Storing and delivering products to retailers',
+                'Providing after-sales customer support'
+            ],
+            correct: 2,
+            explanation: 'Distributors bridge the gap between suppliers and retailers by storing and delivering products efficiently.'
+        }, {
+            question: 'What is the main focus of a buyer in an organization?',
+            choices: [
+                'Maximizing production output',
+                'Negotiating prices and purchasing products',
+                'Managing logistics and transportation',
+                'Overseeing warehouse operations'
+            ],
+            correct: 1,
+            explanation: 'Buyers are responsible for sourcing and purchasing products at the best possible prices and terms.'
+        }, {
+            question: 'What does the term "Supply Chain Management" primarily involve?',
+            choices: [
+                'Managing the flow of goods from suppliers to consumers',
+                'Designing new products for the market',
+                'Setting up manufacturing facilities',
+                'Creating advertising campaigns'
+            ],
+            correct: 0,
+            explanation: 'Supply Chain Management encompasses the entire flow of goods, information, and finances from suppliers to end consumers.'
+        }, {
+            question: 'Which of the following best describes a sustainable supply chain?',
+            choices: [
+                'One that focuses solely on reducing costs',
+                'One that uses only local suppliers',
+                'One that maximizes delivery speed'
+                'One that considers environmental and social impacts',
+            ],
+            correct: 3,
+            explanation: 'A sustainable supply chain balances economic, environmental, and social considerations for long-term viability.'
+        }];
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+        const SCORE_PER_QUESTION = 200000;
+
+        // ============================================================
+        //  GAME STATE
+        // ============================================================
+        const state = {
+            identity: null,
+            currentQuestion: 0,
+            score: 0,
+            totalCorrect: 0,
+            isAnswering: false,
+            gameOver: false,
+        };
+
+        // ============================================================
+        //  DOM REFS
+        // ============================================================
+        const $ = (id) => document.getElementById(id);
+        const app = $('app');
+        const screens = {
+            landing: $('landing'),
+            identity: $('identity-select'),
+            questionNumber: $('question-number'),
+            choices: $('choices'),
+            result: $('result'),
+            final: $('final'),
+        };
+        const scoreDisplay = $('scoreDisplay');
+        const scoreAmount = $('scoreAmount');
+
+        // ============================================================
+        //  SCREEN MANAGEMENT
+        // ============================================================
+        function showScreen(name) {
+            Object.keys(screens).forEach((key) => {
+                screens[key].classList.toggle('active', key === name);
+            });
+        }
+
+        function applyTheme(identity) {
+            app.className = 'theme-' + identity;
+        }
+
+        function updateScore() {
+            scoreAmount.textContent = state.score.toLocaleString();
+        }
+
+        // ============================================================
+        //  IDENTITY LABEL HELPERS
+        // ============================================================
+        function setIdentityLabels() {
+            const labelMap = {
+                supplier: 'Supplier',
+                distributor: 'Distributor',
+                buyer: 'Buyer'
+            };
+            const label = labelMap[state.identity] || '';
+            document.querySelectorAll('.identity-label').forEach(el => {
+                el.textContent = label ? '— ' + label + ' —' : '';
+            });
+        }
+
+        // ============================================================
+        //  SPARKLE EFFECT
+        // ============================================================
+        function createSparkles() {
+            const container = document.getElementById('sparkle-field');
+            if (!container) return;
+            const count = 60;
+            for (let i = 0; i < count; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                const size = 3 + Math.random() * 8;
+                spark.style.width = size + 'px';
+                spark.style.height = size + 'px';
+                spark.style.left = Math.random() * 100 + '%';
+                spark.style.top = Math.random() * 100 + '%';
+                spark.style.animationDelay = (Math.random() * 5) + 's';
+                spark.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+                const hue = 45 + Math.random() * 10;
+                spark.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%), hsl(${hue}, 100%, 40%))`;
+                spark.style.boxShadow = `0 0 8px 2px rgba(255, 215, 0, ${0.2 + Math.random() * 0.4})`;
+                container.appendChild(spark);
+            }
+        }
+
+        // ============================================================
+        //  LANDING
+        // ============================================================
+        $('btnStart').addEventListener('click', () => {
+            Sound.click();
+            showScreen('identity');
+            Sound.startGame();
+        });
+
+        // ============================================================
+        //  IDENTITY SELECT
+        // ============================================================
+        document.querySelectorAll('.identity-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.identity;
+                state.identity = id;
+                applyTheme(id);
+                Sound.selectIdentity();
+                showScreen('questionNumber');
+                state.currentQuestion = 0;
+                state.score = 0;
+                state.totalCorrect = 0;
+                state.gameOver = false;
+                state.isAnswering = false;
+                updateScore();
+                scoreDisplay.style.display = 'flex';
+                setIdentityLabels();
+                showQuestionNumber();
+            });
+        });
+
+        // ============================================================
+        //  QUESTION NUMBER
+        // ============================================================
+        function showQuestionNumber() {
+            const num = state.currentQuestion + 1;
+            $('qnNumber').textContent = num;
+            setIdentityLabels();
+            Sound.transition();
+        }
+
+        $('btnShowChoices').addEventListener('click', () => {
+            if (state.gameOver) return;
+            Sound.click();
+            showChoices();
+        });
+
+        // ============================================================
+        //  CHOICES
+        // ============================================================
+        function showChoices() {
+            const q = QUESTIONS[state.currentQuestion];
+            if (!q) {
+                showFinal();
+                return;
+            }
+            $('chQuestion').textContent = q.question;
+            setIdentityLabels();
+
+            const grid = $('choicesGrid');
+            grid.innerHTML = '';
+            state.isAnswering = false;
+
+            q.choices.forEach((text, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.dataset.index = idx;
+                btn.innerHTML = `
+                    <span class="letter">${LETTERS[idx]}</span>
+                    <span class="text">${text}</span>
+                `;
+                btn.addEventListener('click', () => handleChoice(idx));
+                grid.appendChild(btn);
+            });
+
+            showScreen('choices');
+            Sound.transition();
+        }
+
+        function handleChoice(selected) {
+            if (state.isAnswering || state.gameOver) return;
+            state.isAnswering = true;
+
+            const q = QUESTIONS[state.currentQuestion];
+            const correct = q.correct;
+            const isCorrect = (selected === correct);
+
+            const btns = document.querySelectorAll('.choice-btn');
+            btns.forEach((btn, idx) => {
+                btn.classList.add('disabled');
+                if (idx === correct) btn.classList.add('reveal-correct');
+                if (idx === selected && !isCorrect) btn.classList.add('wrong');
+                if (idx === correct && isCorrect) btn.classList.add('correct');
+            });
+
+            if (isCorrect) {
+                state.score += SCORE_PER_QUESTION;
+                state.totalCorrect += 1;
+                Sound.correct();
+            } else {
+                Sound.wrong();
+            }
+            updateScore();
+
+            setTimeout(() => {
+                showResult(isCorrect, q.explanation);
+            }, 700);
+        }
+
+        // ============================================================
+        //  RESULT
+        // ============================================================
+        function showResult(isCorrect, explanation) {
+            $('resIcon').textContent = isCorrect ? '✅' : '❌';
+            const title = $('resTitle');
+            title.textContent = isCorrect ? 'Correct!' : 'Wrong!';
+            title.className = 'result-title ' + (isCorrect ? 'correct' : 'wrong');
+            $('resScoreChange').textContent = isCorrect ? '+ HK$200,000' : '+ HK$0';
+            $('resExplanation').textContent = explanation;
+            setIdentityLabels();
+
+            const nextBtn = $('btnNextQuestion');
+            if (state.currentQuestion >= QUESTIONS.length - 1) {
+                nextBtn.textContent = 'See Final Results 🏆';
+            } else {
+                nextBtn.textContent = 'Next Question →';
+            }
+
+            showScreen('result');
+            Sound.transition();
+        }
+
+        $('btnNextQuestion').addEventListener('click', () => {
+            if (state.gameOver) return;
+            Sound.click();
+            state.currentQuestion += 1;
+            if (state.currentQuestion >= QUESTIONS.length) {
+                showFinal();
+            } else {
+                showQuestionNumber();
+                showScreen('questionNumber');
+            }
+        });
+
+        // ============================================================
+        //  FINAL
+        // ============================================================
+        function showFinal() {
+            state.gameOver = true;
+            scoreDisplay.style.display = 'none';
+            $('finalAmount').textContent = 'HK$' + state.score.toLocaleString();
+            const identityMap = { supplier: 'Supplier', distributor: 'Distributor', buyer: 'Buyer' };
+            $('finalIdentity').textContent = identityMap[state.identity] || '—';
+
+            const total = state.totalCorrect;
+            let msg = '';
+            if (total === 5) msg = '🌟 Perfect! You are a true supply chain master! 🌟';
+            else if (total >= 4) msg = '🏅 Outstanding! You have exceptional supply chain knowledge!';
+            else if (total >= 3) msg = '👏 Great job! You know your supply chain well!';
+            else if (total >= 2) msg = '💪 Not bad! Keep learning and you\'ll improve!';
+            else msg = '📚 Keep studying the supply chain — you\'ll get there!';
+            $('finalCongrats').textContent = msg;
+
+            applyTheme(state.identity);
+            showScreen('final');
+            Sound.final();
+
+            setIdentityLabels();
+            const finalLabel = document.querySelector('#final .identity-label');
+            if (finalLabel) {
+                const labelMap = { supplier: 'Supplier', distributor: 'Distributor', buyer: 'Buyer' };
+                finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
+            }
+        }
+
+        $('btnPlayAgain').addEventListener('click', () => {
+            Sound.click();
+            state.identity = null;
+            state.currentQuestion = 0;
+            state.score = 0;
+            state.totalCorrect = 0;
+            state.gameOver = false;
+            state.isAnswering = false;
+            scoreDisplay.style.display = 'none';
+            applyTheme('distributor');
+            showScreen('landing');
+        });
+
+        // ============================================================
+        //  KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const active = document.querySelector('.screen.active');
+                if (active) {
+                    const btn = active.querySelector('.btn:not(.disabled)');
+                    if (btn) btn.click();
+                }
+            }
+            if (e.key >= '1' && e.key <= '4') {
+                const idx = parseInt(e.key) - 1;
+                const btns = document.querySelectorAll('.choice-btn:not(.disabled)');
+                if (btns[idx]) btns[idx].click();
+            }
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        showScreen('landing');
+        applyTheme('distributor');
+        scoreDisplay.style.display = 'none';
+        createSparkles();
+
+        console.log('🎯 Who Wants to Be a Millionaire – Supply Chain Edition loaded!');
+        console.log('📖 Answer 5 questions correctly to win up to HK$1,000,000!');
+    </script>
+
+</body>
+</html>
