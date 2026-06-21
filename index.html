@@ -22,7 +22,7 @@
             transition: background 0.8s ease;
             overflow: hidden;
         }
-        /* ----- APP CONTAINER (now fullscreen) ----- */
+        /* ----- APP CONTAINER (fullscreen) ----- */
         #app {
             width: 100vw;
             height: 100vh;
@@ -175,7 +175,7 @@
             justify-content: center;
         }
 
-        /* Sparkle field (unchanged) */
+        /* Sparkle field */
         #sparkle-field {
             position: absolute;
             inset: 0;
@@ -199,12 +199,10 @@
             100% { transform: scale(0.8) rotate(360deg); opacity: 0.6; }
         }
 
-        /* Content wrapper – perfectly centered */
         #landing .content {
             position: relative;
             z-index: 2;
             text-align: center;
-            /* Flex centering is handled by #landing itself, so no extra transform needed */
         }
 
         #landing .game-title {
@@ -914,62 +912,163 @@
         })();
 
         // ============================================================
-        //  GAME DATA
+        //  GAME DATA — separate questions for each identity
         // ============================================================
-        const QUESTIONS = [{
-            question: 'What is the primary role of a supplier in a supply chain?',
+        const QUESTIONS_SUPPLIER = [{
+            question: 'What is the primary responsibility of a supplier?',
             choices: [
-                'Delivering products to end consumers',
-                'Providing raw materials or products to other businesses',
-                'Managing inventory for retail stores',
-                'Transporting goods between warehouses'
-            ],
-            correct: 1,
-            explanation: 'Suppliers are the starting point of the supply chain, providing raw materials or finished products to businesses further down the chain.'
-        }, {
-            question: 'Which activity is a key responsibility of a distributor?',
-            choices: [
-                'Manufacturing products from raw materials',
-                'Designing marketing campaigns for products',
-                'Storing and delivering products to retailers',
-                'Providing after-sales customer support'
+                'Delivering finished products to end consumers',
+                'Managing retail store inventory',
+                'Providing raw materials or components to manufacturers',
+                'Handling customer returns'
             ],
             correct: 2,
-            explanation: 'Distributors bridge the gap between suppliers and retailers by storing and delivering products efficiently.'
+            explanation: 'Suppliers provide the raw materials or components that manufacturers need to create finished goods.'
         }, {
-            question: 'What is the main focus of a buyer in an organization?',
+            question: 'Which of the following is a key supplier performance metric?',
             choices: [
-                'Maximizing production output',
-                'Negotiating prices and purchasing products',
-                'Managing logistics and transportation',
-                'Overseeing warehouse operations'
+                'Customer satisfaction score',
+                'On-time delivery rate',
+                'Number of retail locations',
+                'Marketing campaign reach'
             ],
             correct: 1,
-            explanation: 'Buyers are responsible for sourcing and purchasing products at the best possible prices and terms.'
+            explanation: 'On-time delivery rate is a critical metric for suppliers, as delays can disrupt the entire supply chain.'
         }, {
-            question: 'What does the term "Supply Chain Management" primarily involve?',
+            question: 'What is a common risk faced by suppliers?',
             choices: [
-                'Managing the flow of goods from suppliers to consumers',
-                'Designing new products for the market',
-                'Setting up manufacturing facilities',
-                'Creating advertising campaigns'
+                'Raw material price volatility',
+                'Low customer demand for their products',
+                'Too many retail partners',
+                'Excessive marketing spend'
             ],
             correct: 0,
-            explanation: 'Supply Chain Management encompasses the entire flow of goods, information, and finances from suppliers to end consumers.'
+            explanation: 'Suppliers are vulnerable to fluctuations in raw material prices, which can impact their profit margins.'
         }, {
-            question: 'Which of the following best describes a sustainable supply chain?',
+            question: 'How do suppliers typically build strong relationships with buyers?',
             choices: [
-                'One that focuses solely on reducing costs',
-                'One that uses only local suppliers',
-                'One that maximizes delivery speed',
-                'One that considers environmental and social impacts'
+                'By offering the lowest prices only',
+                'By providing consistent quality and reliable delivery',
+                'By avoiding long-term contracts',
+                'By limiting product variety'
             ],
-            correct: 3,
-            explanation: 'A sustainable supply chain balances economic, environmental, and social considerations for long-term viability.'
+            correct: 1,
+            explanation: 'Reliable suppliers earn trust through consistent quality, on-time delivery, and open communication.'
+        }, {
+            question: 'What does "supplier diversification" mean?',
+            choices: [
+                'Sourcing from a single supplier to simplify management',
+                'Using multiple suppliers to reduce risk',
+                'Focusing only on local suppliers',
+                'Eliminating all suppliers and producing in-house'
+            ],
+            correct: 1,
+            explanation: 'Diversifying suppliers helps companies mitigate risks like supply disruptions or price spikes.'
         }];
 
-        const LETTERS = ['A', 'B', 'C', 'D'];
-        const SCORE_PER_QUESTION = 200000;
+        const QUESTIONS_DISTRIBUTOR = [{
+            question: 'What is the main role of a distributor in the supply chain?',
+            choices: [
+                'Manufacturing products from raw materials',
+                'Storing and delivering products to retailers or end customers',
+                'Designing product packaging',
+                'Providing after-sales technical support'
+            ],
+            correct: 1,
+            explanation: 'Distributors act as intermediaries, storing products and delivering them efficiently to downstream partners.'
+        }, {
+            question: 'Which of the following is a key challenge for distributors?',
+            choices: [
+                'Managing inventory levels across multiple locations',
+                'Setting retail prices for products',
+                'Creating product advertising campaigns',
+                'Hiring factory workers'
+            ],
+            correct: 0,
+            explanation: 'Distributors must balance inventory across warehouses to meet demand without overstocking.'
+        }, {
+            question: 'What does "order fulfillment" mean in a distributor context?',
+            choices: [
+                'The process of receiving and shipping customer orders accurately',
+                'The process of designing new products',
+                'The process of setting up manufacturing lines',
+                'The process of hiring sales staff'
+            ],
+            correct: 0,
+            explanation: 'Order fulfillment involves picking, packing, and shipping orders correctly and on time.'
+        }, {
+            question: 'How do distributors add value to the supply chain?',
+            choices: [
+                'By eliminating the need for retailers',
+                'By consolidating shipments and reducing transportation costs',
+                'By increasing the price of all goods',
+                'By reducing the number of products available to customers'
+            ],
+            correct: 3,
+            explanation: 'Distributors consolidate shipments from multiple suppliers, reducing overall transportation costs.'
+        }, {
+            question: 'What technology do distributors commonly use to track inventory?',
+            choices: [
+                'Social media analytics tools',
+                'Barcode scanners and warehouse management systems',
+                'Graphic design software',
+                'Video conferencing platforms'
+            ],
+            correct: 1,
+            explanation: 'Distributors use barcode scanners and WMS to track inventory in real-time across multiple locations.'
+        }];
+
+        const QUESTIONS_BUYER = [{
+            question: 'What is the primary responsibility of a buyer in an organization?',
+            choices: [
+                'Managing production schedules',
+                'Sourcing and purchasing goods at the best value',
+                'Overseeing product marketing',
+                'Handling customer service complaints'
+            ],
+            correct: 1,
+            explanation: 'Buyers are responsible for acquiring the materials and products needed by their organization at the best possible terms.'
+        }, {
+            question: 'What is a key negotiation skill for buyers?',
+            choices: [
+                'Understanding market prices and supplier costs',
+                'Designing product features',
+                'Managing social media accounts',
+                'Creating promotional materials'
+            ],
+            correct: 0,
+            explanation: 'Effective buyers understand cost structures and market dynamics to negotiate favorable terms.'
+        }, {
+            question: 'Which of the following is a critical metric for a buyer\'s performance?',
+            choices: [
+                'Cost savings achieved through negotiations',
+                'Number of products sold to customers',
+                'Employee satisfaction score',
+                'Social media engagement'
+            ],
+            correct: 0,
+            explanation: 'Buyers are often evaluated on their ability to reduce purchasing costs while maintaining quality.'
+        }, {
+            question: 'What is a Request for Proposal (RFP) in procurement?',
+            choices: [
+                'A marketing brochure for new products',
+                'A type of purchase order for standard items',
+                'A document used to invite suppliers to submit bids for a product or service',
+                'An employee training manual'
+            ],
+            correct: 2,
+            explanation: 'An RFP is a formal document that invites suppliers to compete for a contract, outlining requirements.'
+        }, {
+            question: 'What is a common ethical consideration for buyers?',
+            choices: [
+                'Avoiding social media interactions',
+                'Accepting gifts from suppliers that could influence decisions',
+                'Using only one supplier for all needs',
+                'Favoring local suppliers over all others'
+            ],
+            correct: 1,
+            explanation: 'Buyers must avoid conflicts of interest, such as accepting gifts that could bias their purchasing decisions.'
+        }];
 
         // ============================================================
         //  GAME STATE
@@ -981,7 +1080,11 @@
             totalCorrect: 0,
             isAnswering: false,
             gameOver: false,
+            questions: [], // will be set based on identity
         };
+
+        const LETTERS = ['A', 'B', 'C', 'D'];
+        const SCORE_PER_QUESTION = 200000;
 
         // ============================================================
         //  DOM REFS
@@ -1073,7 +1176,17 @@
                 state.identity = id;
                 applyTheme(id);
                 Sound.selectIdentity();
-                showScreen('questionNumber');
+
+                // Load the correct question set
+                if (id === 'supplier') {
+                    state.questions = QUESTIONS_SUPPLIER;
+                } else if (id === 'distributor') {
+                    state.questions = QUESTIONS_DISTRIBUTOR;
+                } else if (id === 'buyer') {
+                    state.questions = QUESTIONS_BUYER;
+                }
+
+                // Reset game state
                 state.currentQuestion = 0;
                 state.score = 0;
                 state.totalCorrect = 0;
@@ -1083,6 +1196,7 @@
                 scoreDisplay.style.display = 'flex';
                 setIdentityLabels();
                 showQuestionNumber();
+                showScreen('questionNumber');
             });
         });
 
@@ -1106,7 +1220,7 @@
         //  CHOICES
         // ============================================================
         function showChoices() {
-            const q = QUESTIONS[state.currentQuestion];
+            const q = state.questions[state.currentQuestion];
             if (!q) {
                 showFinal();
                 return;
@@ -1138,7 +1252,7 @@
             if (state.isAnswering || state.gameOver) return;
             state.isAnswering = true;
 
-            const q = QUESTIONS[state.currentQuestion];
+            const q = state.questions[state.currentQuestion];
             const correct = q.correct;
             const isCorrect = (selected === correct);
 
@@ -1177,7 +1291,7 @@
             setIdentityLabels();
 
             const nextBtn = $('btnNextQuestion');
-            if (state.currentQuestion >= QUESTIONS.length - 1) {
+            if (state.currentQuestion >= state.questions.length - 1) {
                 nextBtn.textContent = 'See Final Results 🏆';
             } else {
                 nextBtn.textContent = 'Next Question →';
@@ -1191,7 +1305,7 @@
             if (state.gameOver) return;
             Sound.click();
             state.currentQuestion += 1;
-            if (state.currentQuestion >= QUESTIONS.length) {
+            if (state.currentQuestion >= state.questions.length) {
                 showFinal();
             } else {
                 showQuestionNumber();
@@ -1238,6 +1352,7 @@
             state.totalCorrect = 0;
             state.gameOver = false;
             state.isAnswering = false;
+            state.questions = [];
             scoreDisplay.style.display = 'none';
             applyTheme('distributor');
             showScreen('landing');
