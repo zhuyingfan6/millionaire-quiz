@@ -1218,9 +1218,9 @@ const QUESTIONS_BUSINESSUSER = [
         // ============================================================
         function setIdentityLabels() {
             const labelMap = {
+                buyer: 'Buyer',
                 supplier: 'Supplier',
-                distributor: 'Distributor',
-                buyer: 'Buyer'
+                business user: 'Business user'
             };
             const label = labelMap[state.identity] || '';
             document.querySelectorAll('.identity-label').forEach(el => {
@@ -1272,12 +1272,12 @@ const QUESTIONS_BUSINESSUSER = [
                 Sound.selectIdentity();
 
                 // Load the correct question set
-                if (id === 'supplier') {
-                    state.questions = QUESTIONS_SUPPLIER;
-                } else if (id === 'distributor') {
-                    state.questions = QUESTIONS_DISTRIBUTOR;
-                } else if (id === 'buyer') {
+                if (id === 'buyer') {
                     state.questions = QUESTIONS_BUYER;
+                } else if (id === 'supplier') {
+                    state.questions = QUESTIONS_SUPPLIER;
+                } else if (id === 'business user') {
+                    state.questions = QUESTIONS_BUSINESSUSER;
                 }
 
                 // Reset game state
@@ -1419,9 +1419,9 @@ const QUESTIONS_BUSINESSUSER = [
 
             const total = state.totalCorrect;
             let msg = '';
-            if (total === 5) msg = '🌟 Perfect! You are a true supply chain master! 🌟';
-            else if (total >= 4) msg = '🏅 Outstanding! You have exceptional supply chain knowledge!';
-            else if (total >= 3) msg = '👏 Great job! You know your supply chain well!';
+            if (total === 8) msg = '🌟 Perfect! You are a true supply chain master! 🌟';
+            else if (total >= 6) msg = '🏅 Outstanding! You have exceptional supply chain knowledge!';
+            else if (total >= 4) msg = '👏 Great job! You know your supply chain well!';
             else if (total >= 2) msg = '💪 Not bad! Keep learning and you\'ll improve!';
             else msg = '📚 Keep studying the supply chain — you\'ll get there!';
             $('finalCongrats').textContent = msg;
@@ -1433,7 +1433,7 @@ const QUESTIONS_BUSINESSUSER = [
             setIdentityLabels();
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
-                const labelMap = { supplier: 'Supplier', distributor: 'Distributor', buyer: 'Buyer' };
+                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business user' };
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
