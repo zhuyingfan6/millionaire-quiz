@@ -914,162 +914,252 @@
         // ============================================================
         //  GAME DATA — separate questions for each identity
         // ============================================================
-        const QUESTIONS_SUPPLIER = [{
-            question: 'What is the primary responsibility of a supplier?',
-            choices: [
-                'Delivering finished products to end consumers',
-                'Managing retail store inventory',
-                'Providing raw materials or components to manufacturers',
-                'Handling customer returns'
-            ],
-            correct: 2,
-            explanation: 'Suppliers provide the raw materials or components that manufacturers need to create finished goods.'
-        }, {
-            question: 'Which of the following is a key supplier performance metric?',
-            choices: [
-                'Customer satisfaction score',
-                'On-time delivery rate',
-                'Number of retail locations',
-                'Marketing campaign reach'
-            ],
-            correct: 1,
-            explanation: 'On-time delivery rate is a critical metric for suppliers, as delays can disrupt the entire supply chain.'
-        }, {
-            question: 'What is a common risk faced by suppliers?',
-            choices: [
-                'Raw material price volatility',
-                'Low customer demand for their products',
-                'Too many retail partners',
-                'Excessive marketing spend'
-            ],
-            correct: 0,
-            explanation: 'Suppliers are vulnerable to fluctuations in raw material prices, which can impact their profit margins.'
-        }, {
-            question: 'How do suppliers typically build strong relationships with buyers?',
-            choices: [
-                'By offering the lowest prices only',
-                'By providing consistent quality and reliable delivery',
-                'By avoiding long-term contracts',
-                'By limiting product variety'
-            ],
-            correct: 1,
-            explanation: 'Reliable suppliers earn trust through consistent quality, on-time delivery, and open communication.'
-        }, {
-            question: 'What does "supplier diversification" mean?',
-            choices: [
-                'Sourcing from a single supplier to simplify management',
-                'Using multiple suppliers to reduce risk',
-                'Focusing only on local suppliers',
-                'Eliminating all suppliers and producing in-house'
-            ],
-            correct: 1,
-            explanation: 'Diversifying suppliers helps companies mitigate risks like supply disruptions or price spikes.'
-        }];
-
-        const QUESTIONS_DISTRIBUTOR = [{
-            question: 'What is the main role of a distributor in the supply chain?',
-            choices: [
-                'Manufacturing products from raw materials',
-                'Storing and delivering products to retailers or end customers',
-                'Designing product packaging',
-                'Providing after-sales technical support'
-            ],
-            correct: 1,
-            explanation: 'Distributors act as intermediaries, storing products and delivering them efficiently to downstream partners.'
-        }, {
-            question: 'Which of the following is a key challenge for distributors?',
-            choices: [
-                'Managing inventory levels across multiple locations',
-                'Setting retail prices for products',
-                'Creating product advertising campaigns',
-                'Hiring factory workers'
-            ],
-            correct: 0,
-            explanation: 'Distributors must balance inventory across warehouses to meet demand without overstocking.'
-        }, {
-            question: 'What does "order fulfillment" mean in a distributor context?',
-            choices: [
-                'The process of receiving and shipping customer orders accurately',
-                'The process of designing new products',
-                'The process of setting up manufacturing lines',
-                'The process of hiring sales staff'
-            ],
-            correct: 0,
-            explanation: 'Order fulfillment involves picking, packing, and shipping orders correctly and on time.'
-        }, {
-            question: 'How do distributors add value to the supply chain?',
-            choices: [
-                'By eliminating the need for retailers',
-                'By consolidating shipments and reducing transportation costs',
-                'By increasing the price of all goods',
-                'By reducing the number of products available to customers'
-            ],
-            correct: 3,
-            explanation: 'Distributors consolidate shipments from multiple suppliers, reducing overall transportation costs.'
-        }, {
-            question: 'What technology do distributors commonly use to track inventory?',
-            choices: [
-                'Social media analytics tools',
-                'Barcode scanners and warehouse management systems',
-                'Graphic design software',
-                'Video conferencing platforms'
-            ],
-            correct: 1,
-            explanation: 'Distributors use barcode scanners and WMS to track inventory in real-time across multiple locations.'
-        }];
-
-        const QUESTIONS_BUYER = [{
-            question: 'What is the primary responsibility of a buyer in an organization?',
-            choices: [
-                'Managing production schedules',
-                'Sourcing and purchasing goods at the best value',
-                'Overseeing product marketing',
-                'Handling customer service complaints'
-            ],
-            correct: 1,
-            explanation: 'Buyers are responsible for acquiring the materials and products needed by their organization at the best possible terms.'
-        }, {
-            question: 'What is a key negotiation skill for buyers?',
-            choices: [
-                'Understanding market prices and supplier costs',
-                'Designing product features',
-                'Managing social media accounts',
-                'Creating promotional materials'
-            ],
-            correct: 0,
-            explanation: 'Effective buyers understand cost structures and market dynamics to negotiate favorable terms.'
-        }, {
-            question: 'Which of the following is a critical metric for a buyer\'s performance?',
-            choices: [
-                'Cost savings achieved through negotiations',
-                'Number of products sold to customers',
-                'Employee satisfaction score',
-                'Social media engagement'
-            ],
-            correct: 0,
-            explanation: 'Buyers are often evaluated on their ability to reduce purchasing costs while maintaining quality.'
-        }, {
-            question: 'What is a Request for Proposal (RFP) in procurement?',
-            choices: [
-                'A marketing brochure for new products',
-                'A type of purchase order for standard items',
-                'A document used to invite suppliers to submit bids for a product or service',
-                'An employee training manual'
-            ],
-            correct: 2,
-            explanation: 'An RFP is a formal document that invites suppliers to compete for a contract, outlining requirements.'
-        }, {
-            question: 'What is a common ethical consideration for buyers?',
-            choices: [
-                'Avoiding social media interactions',
-                'Accepting gifts from suppliers that could influence decisions',
-                'Using only one supplier for all needs',
-                'Favoring local suppliers over all others'
-            ],
-            correct: 1,
-            explanation: 'Buyers must avoid conflicts of interest, such as accepting gifts that could bias their purchasing decisions.'
-        }];
-
+const QUESTIONS_BUYER = [
+{
+  question: 'Which SCoC topic is most closely related to supplier carbon reduction efforts? 哪個 SCoC 主題最直接與供應商減碳工作有關？',
+  choices: [
+    'Community Relations 社區關係',
+    'Climate Change 氣候變化',
+    'Cybersecurity 網絡安全',
+    'Business Ethics 商業道德'
+  ],
+  correct: 1
+},
+{
+  question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
+  choices: [
+    'Financial audit 財務審計',
+    'Sustainability assessment of suppliers 供應商可持續評分',
+    'Contract signing 合約簽署',
+    'Payment processing 付款處理'
+  ],
+  correct: 1
+},
+{
+  question: 'Which EcoVadis pillar aligns most with anti-bribery requirements? EcoVadis 哪個範疇最符合反貪污要求？',
+  choices: [
+    'Environment 環境',
+    'Ethics 商業道德',
+    'Labour & Human Rights 勞工及人權',
+    'Sustainable Procurement 可持續採購'
+  ],
+  correct: 1
+},
+{
+  question: 'Which SCoC topic promotes equal treatment and prevents discrimination? 哪個 SCoC 主題提倡平等及防止歧視？',
+  choices: [
+    'Diversity and Inclusion 多元共融',
+    'Climate Change 氣候變化',
+    'Quality and Safety 質量及安全',
+    'Community Relations 社區關係'
+  ],
+  correct: 0
+},
+{
+  question: 'Supplier Code of Conduct applies to: 供應商行為守則適用於？',
+  choices: [
+    'Tender only 只限招標',
+    'Large contracts only 只限大合同',
+    'Full lifecycle 整個周期',
+    'Post-award only 中標後'
+  ],
+  correct: 2
+},
+{
+  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
+  choices: [
+    'Supplier provides emissions data and reduction target',
+    'Supplier has anti-bribery controls and conflict of interest process',
+    'Supplier says \'we are sustainable\' in a marketing brochure',
+    'Supplier monitors upstream suppliers against sustainability criteria'
+  ],
+  correct: 2
+},
+{
+  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
+  choices: [
+    'Yes, but supplier must already achieve 100% compliance with every aspect',
+    'Yes, but only for large suppliers',
+    'Yes, CLP may work with suppliers to close gaps through enhancement plans',
+    'No. SCoC is only voluntary guidance'
+  ],
+  correct: 2
+},
+{
+  question: 'Which of the following combinations are covered under the HSSE dimension in the ESG Criteria Framework?',
+  choices: [
+    '(1) and (2) only',
+    '(2) and (4) only',
+    '(1), (2) and (3) only',
+    '(1) and (3) only'
+  ],
+  correct: 3
+}
+];
+const QUESTIONS_SUPPLIER = [
+{
+  question: 'What does CLP expect suppliers to do with their upstream suppliers? CLP 期望供應商如何管理其上游供應商？',
+  choices: [
+    'Ignore upstream suppliers 不用理會上游供應商',
+    'Monitor and manage upstream supplier performance against similar expectations 按類似期望監察及管理上游供應商表現',
+    'Only ask for lowest price 只要求最低價',
+    'Hide upstream supplier information 隱瞞上游供應商資料'
+  ],
+  correct: 1
+},
+{
+  question: 'Which of the following is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct?',
+  choices: [
+    'Revenue Growth 收入增長',
+    'Climate Change 氣候變化',
+    'Marketing Strategy 市場策略',
+    'Branding 品牌管理'
+  ],
+  correct: 1
+},
+{
+  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier?',
+  choices: [
+    'Yes, but supplier must already achieve 100% compliance with every aspect',
+    'Yes, but only for large suppliers',
+    'Yes, CLP may work with suppliers to close gaps through enhancement plans',
+    'No. SCoC is only voluntary guidance'
+  ],
+  correct: 2
+},
+{
+  question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
+  choices: [
+    'Financial audit 財務審計',
+    'Sustainability assessment of suppliers 供應商可持續評分',
+    'Contract signing 合約簽署',
+    'Payment processing 付款處理'
+  ],
+  correct: 1
+},
+{
+  question: 'Which areas are typically covered in EcoVadis assessment?',
+  choices: [
+    'Marketing and branding 市場推廣',
+    'Environment, Labour & Human Rights, Ethics, Sustainable Procurement',
+    'IT systems only 只 IT 系統',
+    'Pricing strategy 定價策略'
+  ],
+  correct: 1
+},
+{
+  question: 'Which supplier demonstrates the strongest evidence of sustainability performance?',
+  choices: [
+    'We care about ESG.',
+    'We support sustainability and have a green logo.',
+    'We have GHG data, reduction targets, environmental management systems, and public sustainability disclosures.',
+    'We plan to start ESG next year.'
+  ],
+  correct: 2
+},
+{
+  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment?',
+  choices: [
+    'Supplier provides emissions data and reduction target',
+    'Supplier has anti-bribery controls and conflict of interest process',
+    'Supplier says \'we are sustainable\' in a marketing brochure',
+    'Supplier monitors upstream suppliers against sustainability criteria'
+  ],
+  correct: 2
+},
+{
+  question: 'Which of the following is NOT one of the 11 SCoC topics?',
+  choices: [
+    'Climate Change 氣候變化',
+    'Business Ethics 商業道德',
+    'Profit and Loss 營收表現',
+    'Community Relations 社區關係'
+  ],
+  correct: 2
+}
+];
+const QUESTIONS_BUSINESSUSER = [
+{
+  question: 'What is BU\'s role in sustainable procurement? BU 在可持續採購中的角色是什麼？',
+  choices: [
+    'Approve PR only 只批 PR',
+    'Embed sustainability requirements in the technical specification 制定可持續要求',
+    'Ignore procurement 不參與',
+    'Payment only 只付款'
+  ],
+  correct: 1
+},
+{
+  question: 'BU promotes sustainability by:',
+  choices: [
+    'Price pressure only 只壓價',
+    'Supplier engagement & innovation 供應商協作與創新',
+    'No communication 不溝通',
+    'Reduce scope 縮範圍'
+  ],
+  correct: 1
+},
+{
+  question: 'Which SCoC topic focuses on protecting employees from workplace hazards?',
+  choices: [
+    'Climate Change 氣候變化',
+    'Community Relations 社區關係',
+    'Employee Health and Safety 員工健康與安全',
+    'Cybersecurity 網絡安全'
+  ],
+  correct: 2
+},
+{
+  question: 'Which action best demonstrates the \'S\' (Social) aspect of ESG according to CLP\'s Supplier Code of Conduct?',
+  choices: [
+    'Switching to LED lighting',
+    'Measuring GHG emissions',
+    'Preventing discrimination, protecting workers and supporting communities',
+    'Improving IT systems'
+  ],
+  correct: 2
+},
+{
+  question: 'Which SCoC topic promotes equal treatment and prevents discrimination?',
+  choices: [
+    'Diversity and Inclusion 多元共融',
+    'Climate Change 氣候變化',
+    'Quality and Safety 質量及安全',
+    'Community Relations 社區關係'
+  ],
+  correct: 0
+},
+{
+  question: 'What does the acronym ESG stand for in the context of sustainable business practices?',
+  choices: [
+    'Efficiency, Safety and Growth',
+    'Economy, Sustainability and Governance',
+    'Energy, Strategy and Growth',
+    'Environment, Social and Governance'
+  ],
+  correct: 3
+},
+{
+  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier?',
+  choices: [
+    'Yes, but supplier must already achieve 100% compliance with every aspect',
+    'Yes, but only for large suppliers',
+    'Yes, CLP may work with suppliers to close gaps through enhancement plans',
+    'No. SCoC is only voluntary guidance'
+  ],
+  correct: 2
+},
+{
+  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment?',
+  choices: [
+    'Supplier provides emissions data and reduction target',
+    'Supplier has anti-bribery controls and conflict of interest process',
+    'Supplier says \'we are sustainable\' in a marketing brochure',
+    'Supplier monitors upstream suppliers against sustainability criteria'
+  ],
+  correct: 2
+}
+];
         // ============================================================
         //  GAME STATE
         // ============================================================
