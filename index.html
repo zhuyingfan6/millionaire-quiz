@@ -34,7 +34,7 @@
             transition: background 0.8s ease;
         }
         /* ----- THEME VARIABLES (set by JS) ----- */
-        .theme-supplier {
+        .theme-buyer {
             --primary: #1a237e;
             --primary-light: #283593;
             --primary-glow: rgba(26, 35, 126, 0.6);
@@ -43,9 +43,9 @@
             --card-bg: rgba(26, 35, 126, 0.25);
             --border-glow: #ffd700;
             --text-accent: #ffd700;
-            --identity-label: 'Supplier';
+            --identity-label: 'Buyer';
         }
-        .theme-distributor {
+        .theme-supplier {
             --primary: #1b5e20;
             --primary-light: #2e7d32;
             --primary-glow: rgba(27, 94, 32, 0.6);
@@ -54,9 +54,9 @@
             --card-bg: rgba(27, 94, 32, 0.25);
             --border-glow: #ffd700;
             --text-accent: #ffd700;
-            --identity-label: 'Distributor';
+            --identity-label: 'Supplier';
         }
-        .theme-buyer {
+        .theme-business-user {
             --primary: #b71c1c;
             --primary-light: #c62828;
             --primary-glow: rgba(183, 28, 28, 0.6);
@@ -65,7 +65,7 @@
             --card-bg: rgba(183, 28, 28, 0.25);
             --border-glow: #ffd700;
             --text-accent: #ffd700;
-            --identity-label: 'Buyer';
+            --identity-label: 'Business User';
         }
 
         /* ----- COMMON ELEMENTS ----- */
@@ -322,13 +322,13 @@
             margin-top: 0.4rem;
             letter-spacing: 0.5px;
         }
-        .identity-card.supplier .icon {
+        .identity-card.buyer .icon {
             color: #5c6bc0;
         }
-        .identity-card.distributor .icon {
+        .identity-card.supplier .icon {
             color: #66bb6a;
         }
-        .identity-card.buyer .icon {
+        .identity-card.business-user .icon {
             color: #ef5350;
         }
 
@@ -340,7 +340,7 @@
             border-color: #66bb6a;
             box-shadow: 0 16px 60px rgba(102, 187, 106, 0.2);
         }
-        .identity-card.business user:hover {
+        .identity-card.business-user:hover {
             border-color: #ef5350;
             box-shadow: 0 16px 60px rgba(239, 83, 80, 0.2);
         }
@@ -728,7 +728,7 @@
 </head>
 <body>
 
-    <div id="app" class="theme-distributor">
+    <div id="app" class="theme-buyer">
         <!-- DECORATIVE CORNERS -->
         <div class="deco-corner tl"></div>
         <div class="deco-corner tr"></div>
@@ -770,10 +770,10 @@
                     <div class="name">Supplier</div>
                     <div class="desc">Deliver &amp; distribute goods</div>
                 </div>
-                <div class="identity-card business user" data-identity="business user">
+                <div class="identity-card business-user" data-identity="businessUser">
                     <span class="icon">🛒</span>
-                    <div class="name">Business user</div>
-                    <div class="desc">Purchase &amp; procure products</div>
+                    <div class="name">Business User</div>
+                    <div class="desc">Request &amp; use business services</div>
                 </div>
             </div>
         </div>
@@ -1082,7 +1082,7 @@ const QUESTIONS_SUPPLIER = [
   correct: 2
 }
 ];
-const QUESTIONS_BUSINESSUSER = [
+const QUESTIONS_BUSINESS_USER = [
 {
   question: 'What is BU\'s role in sustainable procurement? BU 在可持續採購中的角色是什麼？',
   choices: [
@@ -1276,8 +1276,8 @@ const QUESTIONS_BUSINESSUSER = [
                     state.questions = QUESTIONS_BUYER;
                 } else if (id === 'supplier') {
                     state.questions = QUESTIONS_SUPPLIER;
-                } else if (id === 'business user') {
-                    state.questions = QUESTIONS_BUSINESSUSER;
+                } else if (id === 'businessUser') {
+                    state.questions = QUESTIONS_BUSINESS_USER;
                 }
 
                 // Reset game state
@@ -1414,7 +1414,7 @@ const QUESTIONS_BUSINESSUSER = [
             state.gameOver = true;
             scoreDisplay.style.display = 'none';
             $('finalAmount').textContent = 'HK$' + state.score.toLocaleString();
-            const identityMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business User' };
+            const identityMap = { buyer: 'Buyer', supplier: 'Supplier', businessUser: 'Business User' };
             $('finalIdentity').textContent = identityMap[state.identity] || '—';
 
             const total = state.totalCorrect;
@@ -1433,7 +1433,7 @@ const QUESTIONS_BUSINESSUSER = [
             setIdentityLabels();
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
-                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business User' };
+                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', businessUser: 'Business User' };
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
@@ -1448,7 +1448,7 @@ const QUESTIONS_BUSINESSUSER = [
             state.isAnswering = false;
             state.questions = [];
             scoreDisplay.style.display = 'none';
-            applyTheme('Buiness User');
+            applyTheme('buyer');
             showScreen('landing');
         });
 
@@ -1474,7 +1474,7 @@ const QUESTIONS_BUSINESSUSER = [
         //  INIT
         // ============================================================
         showScreen('landing');
-        applyTheme('distributor');
+        applyTheme('buyer');
         scoreDisplay.style.display = 'none';
         createSparkles();
 
