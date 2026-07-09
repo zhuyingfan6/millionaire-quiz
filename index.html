@@ -1178,7 +1178,7 @@ const QUESTIONS_BUSINESSUSER = [
         };
 
         const LETTERS = ['A', 'B', 'C', 'D'];
-        const SCORE_PER_QUESTION = 200000;
+        const SCORE_PER_QUESTION = 125000;
 
         // ============================================================
         //  DOM REFS
@@ -1380,7 +1380,7 @@ const QUESTIONS_BUSINESSUSER = [
             const title = $('resTitle');
             title.textContent = isCorrect ? 'Correct!' : 'Wrong!';
             title.className = 'result-title ' + (isCorrect ? 'correct' : 'wrong');
-            $('resScoreChange').textContent = isCorrect ? '+ HK$200,000' : '+ HK$0';
+            $('resScoreChange').textContent = isCorrect ? '+ HK$125,000' : '+ HK$0';
             $('resExplanation').textContent = explanation;
             setIdentityLabels();
 
