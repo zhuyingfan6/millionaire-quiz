@@ -16,15 +16,12 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0a0a12;
-            /* solid dark background */
             color: #f0e9d8;
             width: 100vw;
             height: 100vh;
             margin: 0;
             position: relative;
-            /* anchor for absolute screens */
             overflow: hidden;
-            /* prevent scrollbars */
         }
 
         /* ----- COMMON ELEMENTS ----- */
@@ -41,7 +38,6 @@
             transition: opacity 0.6s ease, transform 0.6s ease;
             transform: scale(0.96);
             background: #0a0a12;
-            /* default solid background */
         }
         .screen.active {
             opacity: 1;
@@ -71,11 +67,11 @@
         .full-image-screen .image-wrap {
             width: 100%;
             height: 100%;
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            position: relative;
         }
         .full-image-screen .image-wrap img {
             width: 100%;
@@ -84,16 +80,22 @@
             max-width: 100%;
             max-height: 100%;
             background: #0a0a12;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
         }
         .full-image-screen .btn-overlay {
             position: absolute;
-            bottom: 60px;
+            bottom: 50px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 10;
+            z-index: 20;
+            pointer-events: auto;
         }
         .full-image-screen .btn-overlay .btn {
             animation: pulseGlow 2.5s ease-in-out infinite;
+            pointer-events: auto;
+            cursor: pointer;
         }
 
         /* ----- Buttons ----- */
@@ -113,6 +115,7 @@
             z-index: 2;
             transition: all 0.3s ease;
             animation: pulseGlow 2.5s ease-in-out infinite;
+            pointer-events: auto;
         }
         @keyframes pulseGlow {
             0%,
@@ -733,9 +736,9 @@
     <div class="screen full-image-screen active" id="poster">
         <div class="image-wrap">
             <img src="poster.png" alt="Poster" id="posterImg" />
-        </div>
-        <div class="btn-overlay">
-            <button class="btn" id="btnPosterNext">Next →</button>
+            <div class="btn-overlay">
+                <button class="btn" id="btnPosterNext">Next →</button>
+            </div>
         </div>
     </div>
 
@@ -743,9 +746,9 @@
     <div class="screen full-image-screen" id="user-guide">
         <div class="image-wrap">
             <img src="user-guide.png" alt="User Guide" id="userGuideImg" />
-        </div>
-        <div class="btn-overlay">
-            <button class="btn" id="btnGuideNext">Next →</button>
+            <div class="btn-overlay">
+                <button class="btn" id="btnGuideNext">Next →</button>
+            </div>
         </div>
     </div>
 
