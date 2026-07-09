@@ -11,25 +11,20 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* ----- BODY AS ROOT CONTAINER ----- */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0a0a12;
+            /* solid dark background */
             color: #f0e9d8;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* ----- APP CONTAINER ----- */
-        #app {
             width: 100vw;
             height: 100vh;
+            margin: 0;
             position: relative;
+            /* anchor for absolute screens */
             overflow: hidden;
-            background: #0a0a12;
-            /* solid dark background */
+            /* prevent scrollbars */
         }
 
         /* ----- COMMON ELEMENTS ----- */
@@ -211,7 +206,7 @@
             text-transform: uppercase;
         }
 
-        /* ----- LANDING SCREEN (no background design) ----- */
+        /* ----- LANDING SCREEN ----- */
         #landing {
             background: #0a0a12;
             position: relative;
@@ -267,7 +262,7 @@
             opacity: 0.8;
         }
 
-        /* ----- IDENTITY SCREEN (solid) ----- */
+        /* ----- IDENTITY SCREEN ----- */
         #identity-select {
             background: #0a0a12;
         }
@@ -726,118 +721,114 @@
 </head>
 <body>
 
-    <div id="app">
-
-        <!-- TREE DISPLAY (top-right, hidden until game starts) -->
-        <div id="treeDisplay">
-            <div class="tree-grid" id="treeGrid">
-                <!-- 8 trees, 2 rows × 4 cols, filled by JS -->
-            </div>
-            <div class="tree-label">Progress</div>
+    <!-- TREE DISPLAY (top-right, hidden until game starts) -->
+    <div id="treeDisplay">
+        <div class="tree-grid" id="treeGrid">
+            <!-- 8 trees, 2 rows × 4 cols, filled by JS -->
         </div>
+        <div class="tree-label">Progress</div>
+    </div>
 
-        <!-- ===== POSTER ===== -->
-        <div class="screen full-image-screen active" id="poster">
-            <div class="image-wrap">
-                <img src="poster.png" alt="Poster" id="posterImg" />
-            </div>
-            <div class="btn-overlay">
-                <button class="btn" id="btnPosterNext">Next →</button>
-            </div>
+    <!-- ===== POSTER ===== -->
+    <div class="screen full-image-screen active" id="poster">
+        <div class="image-wrap">
+            <img src="poster.png" alt="Poster" id="posterImg" />
         </div>
-
-        <!-- ===== USER GUIDE ===== -->
-        <div class="screen full-image-screen" id="user-guide">
-            <div class="image-wrap">
-                <img src="user-guide.png" alt="User Guide" id="userGuideImg" />
-            </div>
-            <div class="btn-overlay">
-                <button class="btn" id="btnGuideNext">Next →</button>
-            </div>
+        <div class="btn-overlay">
+            <button class="btn" id="btnPosterNext">Next →</button>
         </div>
+    </div>
 
-        <!-- ===== LANDING ===== -->
-        <div class="screen" id="landing">
-            <div class="content">
-                <div class="sub-title">Supply Chain Edition</div>
-                <div class="game-title">Who Wants to Be<br />a Sustainable Millionaire?</div>
-                <div class="tagline">🌱 Test your sustainability knowledge 🌱</div>
-                <button class="btn" id="btnStart">▶ &nbsp;Start</button>
-            </div>
+    <!-- ===== USER GUIDE ===== -->
+    <div class="screen full-image-screen" id="user-guide">
+        <div class="image-wrap">
+            <img src="user-guide.png" alt="User Guide" id="userGuideImg" />
         </div>
+        <div class="btn-overlay">
+            <button class="btn" id="btnGuideNext">Next →</button>
+        </div>
+    </div>
 
-        <!-- ===== IDENTITY SELECT ===== -->
-        <div class="screen" id="identity-select">
-            <div style="text-align:center; margin-bottom:2rem; z-index:2; position:relative;">
-                <div style="font-size:1rem; letter-spacing:6px; text-transform:uppercase; color:#9e9688; margin-bottom:0.3rem;">Choose Your Path</div>
-                <div style="font-size:clamp(1.6rem,4vw,2.8rem); font-weight:700; color:#f0e9d8;">Select Your Identity</div>
+    <!-- ===== LANDING ===== -->
+    <div class="screen" id="landing">
+        <div class="content">
+            <div class="sub-title">Supply Chain Edition</div>
+            <div class="game-title">Who Wants to Be<br />a Sustainable Millionaire?</div>
+            <div class="tagline">🌱 Test your sustainability knowledge 🌱</div>
+            <button class="btn" id="btnStart">▶ &nbsp;Start</button>
+        </div>
+    </div>
+
+    <!-- ===== IDENTITY SELECT ===== -->
+    <div class="screen" id="identity-select">
+        <div style="text-align:center; margin-bottom:2rem; z-index:2; position:relative;">
+            <div style="font-size:1rem; letter-spacing:6px; text-transform:uppercase; color:#9e9688; margin-bottom:0.3rem;">Choose Your Path</div>
+            <div style="font-size:clamp(1.6rem,4vw,2.8rem); font-weight:700; color:#f0e9d8;">Select Your Identity</div>
+        </div>
+        <div class="identity-grid">
+            <div class="identity-card buyer" data-identity="buyer">
+                <span class="icon">🏭</span>
+                <div class="name">Buyer</div>
+                <div class="desc">Source &amp; provide materials</div>
             </div>
-            <div class="identity-grid">
-                <div class="identity-card buyer" data-identity="buyer">
-                    <span class="icon">🏭</span>
-                    <div class="name">Buyer</div>
-                    <div class="desc">Source &amp; provide materials</div>
-                </div>
-                <div class="identity-card supplier" data-identity="supplier">
-                    <span class="icon">🚚</span>
-                    <div class="name">Supplier</div>
-                    <div class="desc">Deliver &amp; distribute goods</div>
-                </div>
-                <div class="identity-card business-user" data-identity="business-user">
-                    <span class="icon">🛒</span>
-                    <div class="name">Business User</div>
-                    <div class="desc">Request &amp; use business services</div>
-                </div>
+            <div class="identity-card supplier" data-identity="supplier">
+                <span class="icon">🚚</span>
+                <div class="name">Supplier</div>
+                <div class="desc">Deliver &amp; distribute goods</div>
+            </div>
+            <div class="identity-card business-user" data-identity="business-user">
+                <span class="icon">🛒</span>
+                <div class="name">Business User</div>
+                <div class="desc">Request &amp; use business services</div>
             </div>
         </div>
+    </div>
 
-        <!-- ===== QUESTION NUMBER ===== -->
-        <div class="screen" id="question-number">
-            <div style="text-align:center; z-index:2; position:relative;">
-                <div class="identity-label" id="qnIdentityLabel"></div>
-                <div class="number-display" id="qnNumber">1</div>
-                <div class="q-label">Question</div>
-                <div class="deco-line"></div>
-                <button class="btn" id="btnShowChoices">Next &nbsp;→</button>
-            </div>
+    <!-- ===== QUESTION NUMBER ===== -->
+    <div class="screen" id="question-number">
+        <div style="text-align:center; z-index:2; position:relative;">
+            <div class="identity-label" id="qnIdentityLabel"></div>
+            <div class="number-display" id="qnNumber">1</div>
+            <div class="q-label">Question</div>
+            <div class="deco-line"></div>
+            <button class="btn" id="btnShowChoices">Next &nbsp;→</button>
         </div>
+    </div>
 
-        <!-- ===== CHOICES ===== -->
-        <div class="screen" id="choices">
-            <div style="text-align:center; width:100%; display:flex; flex-direction:column; align-items:center; z-index:2; position:relative;">
-                <div class="identity-label" id="chIdentityLabel"></div>
-                <div class="question-text" id="chQuestion"></div>
-                <div class="choices-grid" id="choicesGrid"></div>
-            </div>
+    <!-- ===== CHOICES ===== -->
+    <div class="screen" id="choices">
+        <div style="text-align:center; width:100%; display:flex; flex-direction:column; align-items:center; z-index:2; position:relative;">
+            <div class="identity-label" id="chIdentityLabel"></div>
+            <div class="question-text" id="chQuestion"></div>
+            <div class="choices-grid" id="choicesGrid"></div>
         </div>
+    </div>
 
-        <!-- ===== RESULT ===== -->
-        <div class="screen" id="result">
-            <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
-                <div class="identity-label" id="resIdentityLabel"></div>
-                <div class="result-icon" id="resIcon">✅</div>
-                <div class="result-title" id="resTitle">Correct!</div>
-                <div class="result-explanation" id="resExplanation">Explanation here.</div>
-                <button class="btn" id="btnNextQuestion">Next Question →</button>
-            </div>
+    <!-- ===== RESULT ===== -->
+    <div class="screen" id="result">
+        <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
+            <div class="identity-label" id="resIdentityLabel"></div>
+            <div class="result-icon" id="resIcon">✅</div>
+            <div class="result-title" id="resTitle">Correct!</div>
+            <div class="result-explanation" id="resExplanation">Explanation here.</div>
+            <button class="btn" id="btnNextQuestion">Next Question →</button>
         </div>
+    </div>
 
-        <!-- ===== FINAL ===== -->
-        <div class="screen" id="final">
-            <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
-                <div class="final-title">🏆 You Did It!</div>
-                <div class="final-sub">Congratulations on completing the challenge</div>
-                <div class="final-stats">
-                    <div class="stat-label">Trees Grown</div>
-                    <div class="stat-number" id="finalTreeCount">0 / 8</div>
-                </div>
-                <div class="final-trees" id="finalTreeDisplay"></div>
-                <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
-                <div class="final-congrats" id="finalCongrats">You've shown exceptional knowledge in the supply chain world!</div>
-                <button class="btn" id="btnPlayAgain">🔄 &nbsp;Play Again</button>
+    <!-- ===== FINAL ===== -->
+    <div class="screen" id="final">
+        <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
+            <div class="final-title">🏆 You Did It!</div>
+            <div class="final-sub">Congratulations on completing the challenge</div>
+            <div class="final-stats">
+                <div class="stat-label">Trees Grown</div>
+                <div class="stat-number" id="finalTreeCount">0 / 8</div>
             </div>
+            <div class="final-trees" id="finalTreeDisplay"></div>
+            <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
+            <div class="final-congrats" id="finalCongrats">You've shown exceptional knowledge in the supply chain world!</div>
+            <button class="btn" id="btnPlayAgain">🔄 &nbsp;Play Again</button>
         </div>
-
     </div>
 
     <script>
@@ -1197,7 +1188,6 @@
         //  DOM REFS
         // ============================================================
         const $ = (id) => document.getElementById(id);
-        const app = $('app');
         const screens = {
             poster: $('poster'),
             userGuide: $('user-guide'),
