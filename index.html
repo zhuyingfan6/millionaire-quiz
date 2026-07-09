@@ -58,39 +58,46 @@
             background-repeat: no-repeat;
         }
 
-        /* ----- Poster & User Guide (full image) ----- */
+/* ----- Poster & User Guide ----- */
 .full-image-screen {
-    background: #01012e;
+    background: #0a0a12;
     padding: 0;
 }
 
 .full-image-screen .image-wrap {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;   /* push content to bottom */
-    align-items: flex-end;       /* align to right */
-    overflow: hidden;
-    position: relative;          /* for absolute image if needed */
-}
-
-/* Button overlay – flex item, pushed to bottom-right with margin */
-.full-image-screen .btn-overlay {
-    margin: 0 40px 40px 0;
-    z-index: 30;
-    pointer-events: none;
     position: relative;
+    overflow: hidden;
 }
 
-/* Button itself – clickable when screen is active */
+/* PNG as background image */
+.full-image-screen .image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;        /* clicks go through to button */
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Button overlay - bottom right, on top of image */
+.full-image-screen .btn-overlay {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    z-index: 10;
+    pointer-events: none;        /* container doesn't block */
+}
+
+/* Button itself - normal size, clickable */
 .full-image-screen .btn-overlay .btn {
     pointer-events: auto;
     cursor: pointer;
-    animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
-/* When screen is hidden, its button must NOT intercept clicks */
+/* Hidden screen's button - NOT clickable */
 .full-image-screen:not(.active) .btn-overlay .btn {
     pointer-events: none;
 }
