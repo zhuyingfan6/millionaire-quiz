@@ -88,12 +88,14 @@
             transform: translateX(-50%);
             z-index: 30;
             pointer-events: none;
-            /* container doesn't block, but button does */;
         }
         .full-image-screen .btn-overlay .btn {
-            pointer-events: none;
+            pointer-events: auto;
             cursor: pointer;
             animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+        .full-image-screen:not(.active) .btn-overlay .btn {
+            pointer-events: none;
         }
 
         /* ----- Buttons ----- */
