@@ -95,8 +95,9 @@
 .full-image-screen .btn-overlay .btn {
     pointer-events: auto;
     cursor: pointer;
+    padding: 24px 72px;
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem); /* scales with screen */
 }
-
 /* Hidden screen's button - NOT clickable */
 .full-image-screen:not(.active) .btn-overlay .btn {
     pointer-events: none;
