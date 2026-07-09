@@ -59,47 +59,55 @@
         }
 
         /* ----- Poster & User Guide (full image) ----- */
-        .full-image-screen {
-            background: #01012e;
-            padding: 0;
-        }
-        .full-image-screen .image-wrap {
+.full-image-screen {
+    background: #01012e;
+    padding: 0;
+}
+
+.full-image-screen .image-wrap {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-end;
+    justify-content: flex-end;   /* push content to bottom */
+    align-items: flex-end;       /* align to right */
     overflow: hidden;
-    position: relative;
+    position: relative;          /* for absolute image if needed */
 }
 
+/* Image: contained, fills container but preserves aspect ratio */
 .full-image-screen .image-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
+    object-fit: contain;         /* shows full image, no crop */
     display: block;
     user-select: none;
     -webkit-user-drag: none;
-    pointer-events: none;
+    pointer-events: none;        /* clicks pass through to button */
 }
 
+/* Button overlay – flex item, pushed to bottom-right with margin */
 .full-image-screen .btn-overlay {
-    margin: 0 40px 40px 0;
+    margin: 0 40px 40px 0;       /* distance from right and bottom */
     z-index: 30;
-    pointer-events: none;
-    position: relative; /* ensure it's above the image */
+    pointer-events: none;        /* container doesn't block, button decides */
+    position: relative;          /* ensure it's above the image */
 }
-        .full-image-screen .btn-overlay .btn {
-            pointer-events: auto;
-            cursor: pointer;
-            animation: pulseGlow 2.5s ease-in-out infinite;
-        }
-        .full-image-screen:not(.active) .btn-overlay .btn {
-            pointer-events: none;
-        }
+
+/* Button itself – clickable when screen is active */
+.full-image-screen .btn-overlay .btn {
+    pointer-events: auto;        /* clickable when parent has .active */
+    cursor: pointer;
+    animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* When screen is hidden, its button must NOT intercept clicks */
+.full-image-screen:not(.active) .btn-overlay .btn {
+    pointer-events: none;        /* prevents hidden screen's button from catching clicks */
+}
 
         /* ----- Buttons ----- */
         .btn {
