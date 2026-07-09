@@ -332,15 +332,15 @@
             color: #ef5350;
         }
 
-        .identity-card.supplier:hover {
+        .identity-card.buyer:hover {
             border-color: #5c6bc0;
             box-shadow: 0 16px 60px rgba(92, 107, 192, 0.2);
         }
-        .identity-card.distributor:hover {
+        .identity-card.supplier:hover {
             border-color: #66bb6a;
             box-shadow: 0 16px 60px rgba(102, 187, 106, 0.2);
         }
-        .identity-card.buyer:hover {
+        .identity-card.business user:hover {
             border-color: #ef5350;
             box-shadow: 0 16px 60px rgba(239, 83, 80, 0.2);
         }
@@ -760,19 +760,19 @@
                 <div style="font-size:clamp(1.6rem,4vw,2.8rem); font-weight:700; color:#f0e9d8;">Select Your Identity</div>
             </div>
             <div class="identity-grid">
-                <div class="identity-card supplier" data-identity="supplier">
+                <div class="identity-card buyer" data-identity="buyer">
                     <span class="icon">🏭</span>
-                    <div class="name">Supplier</div>
+                    <div class="name">Buyer</div>
                     <div class="desc">Source &amp; provide materials</div>
                 </div>
-                <div class="identity-card distributor" data-identity="distributor">
+                <div class="identity-card supplier" data-identity="supplier">
                     <span class="icon">🚚</span>
-                    <div class="name">Distributor</div>
+                    <div class="name">Supplier</div>
                     <div class="desc">Deliver &amp; distribute goods</div>
                 </div>
-                <div class="identity-card buyer" data-identity="buyer">
+                <div class="identity-card business user" data-identity="business user">
                     <span class="icon">🛒</span>
-                    <div class="name">Buyer</div>
+                    <div class="name">Business user</div>
                     <div class="desc">Purchase &amp; procure products</div>
                 </div>
             </div>
@@ -804,7 +804,7 @@
                 <div class="identity-label" id="resIdentityLabel"></div>
                 <div class="result-icon" id="resIcon">✅</div>
                 <div class="result-title" id="resTitle">Correct!</div>
-                <div class="score-change" id="resScoreChange">+ HK$200,000</div>
+                <div class="score-change" id="resScoreChange">+ HK$125,000</div>
                 <div class="result-explanation" id="resExplanation">Explanation here.</div>
                 <button class="btn" id="btnNextQuestion">Next Question →</button>
             </div>
@@ -1220,7 +1220,7 @@ const QUESTIONS_BUSINESSUSER = [
             const labelMap = {
                 buyer: 'Buyer',
                 supplier: 'Supplier',
-                business user: 'Business user'
+                business user: 'Business User'
             };
             const label = labelMap[state.identity] || '';
             document.querySelectorAll('.identity-label').forEach(el => {
@@ -1414,7 +1414,7 @@ const QUESTIONS_BUSINESSUSER = [
             state.gameOver = true;
             scoreDisplay.style.display = 'none';
             $('finalAmount').textContent = 'HK$' + state.score.toLocaleString();
-            const identityMap = { supplier: 'Supplier', distributor: 'Distributor', buyer: 'Buyer' };
+            const identityMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business User' };
             $('finalIdentity').textContent = identityMap[state.identity] || '—';
 
             const total = state.totalCorrect;
@@ -1433,7 +1433,7 @@ const QUESTIONS_BUSINESSUSER = [
             setIdentityLabels();
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
-                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business user' };
+                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', business user: 'Business User' };
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
@@ -1448,7 +1448,7 @@ const QUESTIONS_BUSINESSUSER = [
             state.isAnswering = false;
             state.questions = [];
             scoreDisplay.style.display = 'none';
-            applyTheme('distributor');
+            applyTheme('Buiness User');
             showScreen('landing');
         });
 
@@ -1479,7 +1479,7 @@ const QUESTIONS_BUSINESSUSER = [
         createSparkles();
 
         console.log('🎯 Who Wants to Be a Millionaire – Supply Chain Edition loaded!');
-        console.log('📖 Answer 5 questions correctly to win up to HK$1,000,000!');
+        console.log('📖 Answer 8 questions correctly to win up to HK$1,000,000!');
     </script>
 
 </body>
