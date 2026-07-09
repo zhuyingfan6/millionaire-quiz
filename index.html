@@ -60,14 +60,12 @@
 
 /* ----- Poster & User Guide ----- */
 .full-image-screen {
-    background: #0a0a12;
+    background: #01012b;
 }
 
 .full-image-screen .image-wrap {
     width: 100%;
     height: 100%;
-    position: relative;
-    overflow: hidden;
 }
 
 /* PNG as background image */
@@ -76,11 +74,19 @@
     height: 100%;
     object-fit: contain;
     display: block;
-    pointer-events: none;        /* clicks go through to button */
+    pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
 }
 
+
+.full-image-screen .btn-overlay .btn {
+    pointer-events: auto;
+    cursor: pointer;
+    padding: 48px 144px;
+    font-size: clamp(2.5rem, 3.0vw, 3.2rem);
+}
+        
 /* Button overlay - bottom right, on top of image */
 .full-image-screen .btn-overlay {
     position: absolute;
