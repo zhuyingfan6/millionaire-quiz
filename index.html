@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Who Wants to Be a Millionaire – Supply Chain Edition</title>
+    <title>Who Wants to Be a Sustainable Millionaire – Supply Chain Edition</title>
     <style>
         /* ----- RESET & BASE ----- */
         * {
@@ -796,7 +796,7 @@
                 </div>
                 <div class="identity-card business-user" data-identity="business-user">
                     <span class="icon">🛒</span>
-                    <div class="name">Business User</div>
+                    <div class="name">'Business User'</div>
                     <div class="desc">Request &amp; use business services</div>
                 </div>
             </div>
@@ -1244,7 +1244,7 @@ const QUESTIONS_BUSINESS_USER = [
             const labelMap = {
                 buyer: 'Buyer',
                 supplier: 'Supplier',
-                business user: 'Business User'
+                'business-user': 'Business User'
             };
             const label = labelMap[state.identity] || '';
             document.querySelectorAll('.identity-label').forEach(el => {
