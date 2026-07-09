@@ -77,22 +77,22 @@
 
 /* Button overlay – flex item, pushed to bottom-right with margin */
 .full-image-screen .btn-overlay {
-    margin: 0 40px 40px 0;       /* distance from right and bottom */
+    margin: 0 40px 40px 0;
     z-index: 30;
-    pointer-events: none;        /* container doesn't block, button decides */
-    position: relative;          /* ensure it's above the image */
+    pointer-events: none;
+    position: relative;
 }
 
 /* Button itself – clickable when screen is active */
 .full-image-screen .btn-overlay .btn {
-    pointer-events: auto;        /* clickable when parent has .active */
+    pointer-events: auto;
     cursor: pointer;
     animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
 /* When screen is hidden, its button must NOT intercept clicks */
 .full-image-screen:not(.active) .btn-overlay .btn {
-    pointer-events: none;        /* prevents hidden screen's button from catching clicks */
+    pointer-events: none;
 }
 
         /* ----- Buttons ----- */
