@@ -1183,10 +1183,11 @@
         //  SCREEN MANAGEMENT
         // ============================================================
         function showScreen(name) {
-            Object.keys(screens).forEach((key) => {
-                screens[key].classList.toggle('active', key === name);
-            });
-        }
+    console.log('showScreen called with:', name);   // ← add this
+    Object.keys(screens).forEach((key) => {
+        screens[key].classList.toggle('active', key === name);
+    });
+}
 
         function setIdentityLabels() {
             const labelMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
