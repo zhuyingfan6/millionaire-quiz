@@ -19,10 +19,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.8s ease;
             overflow: hidden;
         }
-        /* ----- APP CONTAINER (fullscreen) ----- */
+
+        /* ----- APP CONTAINER ----- */
         #app {
             width: 100vw;
             height: 100vh;
@@ -30,46 +30,8 @@
             overflow: hidden;
             border-radius: 0;
             box-shadow: none;
-            background: radial-gradient(ellipse at 50% 40%, #50e650 0%, #0a0a12 60%);
+            background: radial-gradient(ellipse at 50% 40%, #2a3a2a 0%, #0a0a12 60%);
             transition: background 0.8s ease;
-        }
-        /* ----- THEME VARIABLES (set by JS) ----- */
-        .theme-buyer {
-            --primary: #1a237e;
-            --primary-light: #283593;
-            --primary-glow: rgba(26, 35, 126, 0.6);
-            --accent: #ffd700;
-            --accent-glow: rgba(255, 215, 0, 0.5);
-            --card-bg: rgba(26, 35, 126, 0.25);
-            --border-glow: #ffd700;
-            --text-accent: #ffd700;
-            --identity-label: 'Buyer';
-
-            --identity-bg: url('images/bg-buyer.png');
-        }
-        .theme-supplier {
-            --primary: #1b5e20;
-            --primary-light: #2e7d32;
-            --primary-glow: rgba(27, 94, 32, 0.6);
-            --accent: #ffd700;
-            --accent-glow: rgba(255, 215, 0, 0.5);
-            --card-bg: rgba(27, 94, 32, 0.25);
-            --border-glow: #ffd700;
-            --text-accent: #ffd700;
-            --identity-label: 'Supplier';
-            --identity-bg: url('images/bg-supplier.png');
-        }
-        .theme-business-user {
-            --primary: #b71c1c;
-            --primary-light: #c62828;
-            --primary-glow: rgba(183, 28, 28, 0.6);
-            --accent: #ffd700;
-            --accent-glow: rgba(255, 215, 0, 0.5);
-            --card-bg: rgba(183, 28, 28, 0.25);
-            --border-glow: #ffd700;
-            --text-accent: #ffd700;
-            --identity-label: 'Business User';
-            --identity-bg: url('images/bg-business-user.png');
         }
 
         /* ----- COMMON ELEMENTS ----- */
@@ -80,7 +42,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 12rem;
+            padding: 2rem;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.6s ease, transform 0.6s ease;
@@ -110,8 +72,13 @@
             animation: pulseGlow 2.5s ease-in-out infinite;
         }
         @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 8px 60px rgba(255, 215, 0, 0.8), 0 0 120px rgba(255, 215, 0, 0.2); }
+            0%,
+            100% {
+                box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 60px rgba(255, 215, 0, 0.8), 0 0 120px rgba(255, 215, 0, 0.2);
+            }
         }
         .btn:hover {
             transform: translateY(-3px) scale(1.04);
@@ -135,51 +102,110 @@
             font-weight: 300;
             letter-spacing: 4px;
             text-transform: uppercase;
-            color: var(--accent);
+            color: #ffd700;
             opacity: 0.8;
             margin-bottom: 0.5rem;
         }
-        .identity-label::after {
-            content: var(--identity-label, '');
-            font-weight: 700;
-            color: var(--accent);
-        }
 
-        .score-display {
+        /* ----- TREE DISPLAY (top-right) ----- */
+        #treeDisplay {
             position: absolute;
-            top: 28px;
-            right: 32px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--accent);
-            background: rgba(0, 0, 0, 0.6);
-            padding: 8px 20px;
-            border-radius: 40px;
-            border: 1px solid var(--accent);
-            backdrop-filter: blur(8px);
+            top: 20px;
+            right: 24px;
             z-index: 50;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+            /* hidden until game starts */;
         }
-        .score-display .currency {
-            font-size: 0.9rem;
-            opacity: 0.7;
+        #treeDisplay .tree-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        #treeDisplay .tree-icon {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        #treeDisplay .tree-icon.green {
+            filter: drop-shadow(0 0 8px rgba(76, 175, 80, 0.6));
+        }
+        #treeDisplay .tree-icon.bounce {
+            animation: treeBounce 0.5s ease;
+        }
+        @keyframes treeBounce {
+            0% {
+                transform: scale(1);
+            }
+            30% {
+                transform: scale(1.4);
+            }
+            60% {
+                transform: scale(0.85);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        #treeDisplay .tree-label {
+            text-align: center;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+            text-transform: uppercase;
         }
 
-        /* ----- LANDING SCREEN ---- */
+        /* ----- POSTER & USER GUIDE SCREENS ----- */
+        .full-image-screen {
+            background: #0a0a12;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .full-image-screen .image-wrap {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .full-image-screen .image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+            background: #0a0a12;
+        }
+        .full-image-screen .btn-overlay {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .full-image-screen .btn-overlay .btn {
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        /* ----- LANDING SCREEN ----- */
         #landing {
-            background: radial-gradient(ellipse at 50% 40%, #4ec24e, #0d1f0d);
+            background: radial-gradient(ellipse at 50% 40%, #2a4a2a, #0a0a12);
             position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        /* Sparkle field */
         #sparkle-field {
             position: absolute;
             inset: 0;
@@ -187,7 +213,6 @@
             pointer-events: none;
             overflow: hidden;
         }
-
         .spark {
             position: absolute;
             border-radius: 50%;
@@ -196,40 +221,45 @@
             animation: sparkleAnim 2s ease-in-out infinite alternate;
             opacity: 0;
         }
-
         @keyframes sparkleAnim {
-            0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
-            100% { transform: scale(0.8) rotate(360deg); opacity: 0.6; }
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8) rotate(360deg);
+                opacity: 0.6;
+            }
         }
-
         #landing .content {
             position: relative;
             z-index: 2;
             text-align: center;
         }
-
         #landing .game-title {
             font-size: clamp(2.8rem, 10vw, 5.6rem);
             font-weight: 900;
             letter-spacing: 6px;
             text-transform: uppercase;
             color: #ffd700;
-            text-shadow:
-                0 0 30px rgba(255, 215, 0, 0.6),
-                0 0 60px rgba(255, 215, 0, 0.3),
-                0 0 120px rgba(255, 215, 0, 0.15),
-                0 10px 40px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 215, 0, 0.3), 0 0 120px rgba(255, 215, 0, 0.15), 0 10px 40px rgba(0, 0, 0, 0.8);
             animation: floatTitle 6s ease-in-out infinite;
             line-height: 1.2;
             margin-bottom: 0.3rem;
         }
-
         @keyframes floatTitle {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.02); }
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.02);
+            }
         }
-
         .game-title::after {
             content: '';
             display: block;
@@ -240,7 +270,6 @@
             border-radius: 4px;
             box-shadow: 0 0 30px #ffd700;
         }
-
         #landing .sub-title {
             font-size: clamp(1rem, 2.5vw, 1.8rem);
             font-weight: 300;
@@ -249,18 +278,12 @@
             margin-bottom: 0.8rem;
             text-transform: uppercase;
         }
-
         #landing .tagline {
             font-size: clamp(0.9rem, 1.5vw, 1.2rem);
             color: #9e9688;
             margin-bottom: 2.5rem;
             letter-spacing: 2px;
             opacity: 0.8;
-        }
-
-        #landing .btn {
-            font-size: 1.6rem;
-            padding: 18px 64px;
         }
 
         /* ----- IDENTITY SCREEN ----- */
@@ -303,7 +326,7 @@
         }
         .identity-card:hover {
             transform: translateY(-8px) scale(1.02);
-            border-color: var(--accent);
+            border-color: #ffd700;
             box-shadow: 0 16px 60px rgba(255, 215, 0, 0.15);
         }
         .identity-card:active {
@@ -335,7 +358,6 @@
         .identity-card.business-user .icon {
             color: #ef5350;
         }
-
         .identity-card.buyer:hover {
             border-color: #5c6bc0;
             box-shadow: 0 16px 60px rgba(92, 107, 192, 0.2);
@@ -351,18 +373,13 @@
 
         /* ----- QUESTION NUMBER SCREEN ----- */
         #question-number {
-            background-image:
-                linear-gradient(rgba(10, 10, 18, 0.45), rgba(10, 10, 18, 0.45)),
-                var(--identity-bg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
         }
         #question-number .number-display {
             font-size: clamp(8rem, 25vw, 16rem);
             font-weight: 900;
-            color: var(--accent);
-            text-shadow: 0 0 80px var(--accent-glow), 0 0 160px var(--primary-glow);
+            color: #ffd700;
+            text-shadow: 0 0 80px rgba(255, 215, 0, 0.4), 0 0 160px rgba(0, 0, 0, 0.4);
             animation: pulseNumber 2s ease-in-out infinite;
             line-height: 1;
         }
@@ -387,7 +404,7 @@
         #question-number .deco-line {
             width: 120px;
             height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
             margin: 1.2rem auto;
         }
         #question-number .btn {
@@ -396,12 +413,7 @@
 
         /* ----- CHOICES SCREEN ----- */
         #choices {
-            background-image:
-                linear-gradient(rgba(10, 10, 18, 0.45), rgba(10, 10, 18, 0.45)),
-                var(--identity-bg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
         }
         #choices .question-text {
             font-size: clamp(1.2rem, 2.8vw, 2.2rem);
@@ -445,14 +457,14 @@
             height: 36px;
             border-radius: 50%;
             background: rgba(255, 215, 0, 0.15);
-            color: var(--accent);
+            color: #ffd700;
             font-weight: 700;
             font-size: 1rem;
             flex-shrink: 0;
             transition: all 0.3s ease;
         }
         .choice-btn:hover {
-            border-color: var(--accent);
+            border-color: #ffd700;
             background: rgba(255, 215, 0, 0.08);
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -501,12 +513,7 @@
 
         /* ----- RESULT SCREEN ----- */
         #result {
-            background-image:
-                linear-gradient(rgba(10, 10, 18, 0.45), rgba(10, 10, 18, 0.45)),
-                var(--identity-bg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
         }
         #result .result-icon {
             font-size: 5rem;
@@ -550,30 +557,20 @@
             border: 1px solid rgba(255, 255, 255, 0.06);
             margin: 0.8rem 0 1.8rem;
         }
-        #result .score-change {
-            font-size: 1.1rem;
-            color: var(--accent);
-            margin-bottom: 0.2rem;
-        }
         #result .btn {
             margin-top: 0.5rem;
         }
 
         /* ----- FINAL SCREEN ----- */
         #final {
-            background-image:
-                linear-gradient(rgba(10, 10, 18, 0.45), rgba(10, 10, 18, 0.45)),
-                var(--identity-bg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
         }
         #final .final-title {
             font-size: clamp(2.4rem, 6vw, 4.2rem);
             font-weight: 900;
             letter-spacing: 4px;
-            color: var(--accent);
-            text-shadow: 0 0 60px var(--accent-glow);
+            color: #ffd700;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.4);
             margin-bottom: 0.5rem;
         }
         #final .final-sub {
@@ -582,22 +579,23 @@
             letter-spacing: 2px;
             margin-bottom: 1.2rem;
         }
-        #final .final-score-box {
+        #final .final-stats {
             background: rgba(0, 0, 0, 0.4);
-            border: 2px solid var(--accent);
+            border: 2px solid #ffd700;
             border-radius: 24px;
-            padding: 2rem 4rem;
+            padding: 1.8rem 3rem;
             margin: 1rem 0 1.8rem;
             backdrop-filter: blur(12px);
-            box-shadow: 0 0 60px var(--accent-glow);
+            box-shadow: 0 0 60px rgba(255, 215, 0, 0.15);
+            text-align: center;
         }
-        #final .final-score-box .amount {
-            font-size: clamp(3.2rem, 8vw, 5.6rem);
+        #final .final-stats .stat-number {
+            font-size: clamp(3rem, 7vw, 4.8rem);
             font-weight: 900;
-            color: var(--accent);
+            color: #ffd700;
             letter-spacing: 2px;
         }
-        #final .final-score-box .label {
+        #final .final-stats .stat-label {
             font-size: 1rem;
             color: #b0a898;
             letter-spacing: 3px;
@@ -610,7 +608,7 @@
             margin-bottom: 0.2rem;
         }
         #final .final-identity span {
-            color: var(--accent);
+            color: #ffd700;
             font-weight: 700;
         }
         #final .final-congrats {
@@ -625,14 +623,28 @@
             padding: 14px 48px;
             font-size: 1.2rem;
         }
+        #final .final-trees {
+            display: flex;
+            gap: 6px;
+            margin: 0.5rem 0 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #final .final-trees img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+        }
 
-        /* ----- DECORATIVE ELEMENTS (corners only) ----- */
+        /* ----- DECORATIVE CORNERS ----- */
         .deco-corner {
             position: absolute;
             width: 60px;
             height: 60px;
-            border: 2px solid rgba(255, 215, 0, 0.08);
+            border: 2px solid rgba(255, 215, 0, 0.06);
             pointer-events: none;
+            z-index: 1;
         }
         .deco-corner.tl {
             top: 20px;
@@ -683,21 +695,34 @@
             .identity-card .name {
                 font-size: 1.2rem;
             }
-            .score-display {
-                top: 14px;
-                right: 16px;
-                font-size: 0.9rem;
-                padding: 4px 14px;
-            }
             #result .result-explanation {
                 font-size: 0.9rem;
                 padding: 1rem 1.2rem;
             }
-            #final .final-score-box {
+            #final .final-stats {
                 padding: 1.2rem 2rem;
             }
             .deco-corner {
                 display: none;
+            }
+            #treeDisplay {
+                top: 12px;
+                right: 12px;
+                padding: 6px 10px;
+            }
+            #treeDisplay .tree-icon {
+                width: 28px;
+                height: 28px;
+            }
+            #treeDisplay .tree-grid {
+                gap: 4px;
+            }
+            .full-image-screen .btn-overlay {
+                bottom: 30px;
+            }
+            .full-image-screen .btn-overlay .btn {
+                padding: 12px 32px;
+                font-size: 1rem;
             }
         }
         @media (max-width: 480px) {
@@ -738,41 +763,79 @@
                 height: 28px;
                 font-size: 0.8rem;
             }
-            .score-display {
-                font-size: 0.75rem;
-                padding: 4px 10px;
-                top: 10px;
-                right: 10px;
-            }
-            #final .final-score-box .amount {
+            #final .final-stats .stat-number {
                 font-size: 2.6rem;
+            }
+            #treeDisplay .tree-icon {
+                width: 22px;
+                height: 22px;
+            }
+            #treeDisplay {
+                top: 8px;
+                right: 8px;
+                padding: 4px 8px;
+                border-radius: 10px;
+            }
+            #treeDisplay .tree-grid {
+                gap: 3px;
+            }
+            #treeDisplay .tree-label {
+                font-size: 0.5rem;
+            }
+            .full-image-screen .btn-overlay {
+                bottom: 20px;
+            }
+            .full-image-screen .btn-overlay .btn {
+                padding: 10px 24px;
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div id="app" class="theme-buyer">
+    <div id="app">
         <!-- DECORATIVE CORNERS -->
         <div class="deco-corner tl"></div>
         <div class="deco-corner tr"></div>
         <div class="deco-corner bl"></div>
         <div class="deco-corner br"></div>
 
-        <!-- SCORE (visible during game) -->
-        <div class="score-display" id="scoreDisplay" style="display:none;">
-            <span class="currency">HK$</span>
-            <span id="scoreAmount">0</span>
+        <!-- TREE DISPLAY (top-right, hidden until game starts) -->
+        <div id="treeDisplay">
+            <div class="tree-grid" id="treeGrid">
+                <!-- 8 trees, 2 rows × 4 cols, filled by JS -->
+            </div>
+            <div class="tree-label">Progress</div>
+        </div>
+
+        <!-- ===== POSTER ===== -->
+        <div class="screen full-image-screen active" id="poster">
+            <div class="image-wrap">
+                <img src="poster.png" alt="Poster" id="posterImg" />
+            </div>
+            <div class="btn-overlay">
+                <button class="btn" id="btnPosterNext">Next →</button>
+            </div>
+        </div>
+
+        <!-- ===== USER GUIDE ===== -->
+        <div class="screen full-image-screen" id="user-guide">
+            <div class="image-wrap">
+                <img src="user-guide.png" alt="User Guide" id="userGuideImg" />
+            </div>
+            <div class="btn-overlay">
+                <button class="btn" id="btnGuideNext">Next →</button>
+            </div>
         </div>
 
         <!-- ===== LANDING ===== -->
-        <div class="screen active" id="landing">
-            <div class="bg-glow"></div>
+        <div class="screen" id="landing">
             <div id="sparkle-field"></div>
             <div class="content">
                 <div class="sub-title">Supply Chain Edition</div>
-                <div class="game-title">Who Wants to Be<br />a Millionaire?</div>
-                <div class="tagline">⚡ Test your knowledge &amp; win big ⚡</div>
+                <div class="game-title">Who Wants to Be<br />a Sustainable Millionaire?</div>
+                <div class="tagline">🌱 Test your sustainability knowledge 🌱</div>
                 <button class="btn" id="btnStart">▶ &nbsp;Start</button>
             </div>
         </div>
@@ -796,7 +859,7 @@
                 </div>
                 <div class="identity-card business-user" data-identity="business-user">
                     <span class="icon">🛒</span>
-                    <div class="name">'Business User'</div>
+                    <div class="name">Business User</div>
                     <div class="desc">Request &amp; use business services</div>
                 </div>
             </div>
@@ -828,7 +891,6 @@
                 <div class="identity-label" id="resIdentityLabel"></div>
                 <div class="result-icon" id="resIcon">✅</div>
                 <div class="result-title" id="resTitle">Correct!</div>
-                <div class="score-change" id="resScoreChange">+ HK$125,000</div>
                 <div class="result-explanation" id="resExplanation">Explanation here.</div>
                 <button class="btn" id="btnNextQuestion">Next Question →</button>
             </div>
@@ -839,10 +901,11 @@
             <div style="text-align:center; z-index:2; position:relative; display:flex; flex-direction:column; align-items:center;">
                 <div class="final-title">🏆 You Did It!</div>
                 <div class="final-sub">Congratulations on completing the challenge</div>
-                <div class="final-score-box">
-                    <div class="label">Your Prize</div>
-                    <div class="amount" id="finalAmount">HK$0</div>
+                <div class="final-stats">
+                    <div class="stat-label">Trees Grown</div>
+                    <div class="stat-number" id="finalTreeCount">0 / 8</div>
                 </div>
+                <div class="final-trees" id="finalTreeDisplay"></div>
                 <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
                 <div class="final-congrats" id="finalCongrats">You've shown exceptional knowledge in the supply chain world!</div>
                 <button class="btn" id="btnPlayAgain">🔄 &nbsp;Play Again</button>
@@ -938,271 +1001,271 @@
         // ============================================================
         //  GAME DATA — separate questions for each identity
         // ============================================================
-const QUESTIONS_BUYER = [
-{
-  question: 'Which SCoC topic is most closely related to supplier carbon reduction efforts? 哪個 SCoC 主題最直接與供應商減碳工作有關？',
-  choices: [
-    'Community Relations 社區關係',
-    'Climate Change 氣候變化',
-    'Cybersecurity 網絡安全',
-    'Business Ethics 商業道德'
-  ],
-  correct: 1
-},
-{
-  question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
-  choices: [
-    'Financial audit 財務審計',
-    'Sustainability assessment of suppliers 供應商可持續評分',
-    'Contract signing 合約簽署',
-    'Payment processing 付款處理'
-  ],
-  correct: 1
-},
-{
-  question: 'Which EcoVadis pillar aligns most with anti-bribery requirements? EcoVadis 哪個範疇最符合反貪污要求？',
-  choices: [
-    'Environment 環境',
-    'Ethics 商業道德',
-    'Labour & Human Rights 勞工及人權',
-    'Sustainable Procurement 可持續採購'
-  ],
-  correct: 1
-},
-{
-  question: 'Which SCoC topic promotes equal treatment and prevents discrimination? 哪個 SCoC 主題提倡平等及防止歧視？',
-  choices: [
-    'Diversity and Inclusion 多元共融',
-    'Climate Change 氣候變化',
-    'Quality and Safety 質量及安全',
-    'Community Relations 社區關係'
-  ],
-  correct: 0
-},
-{
-  question: 'Supplier Code of Conduct applies to: 供應商行為守則適用於？',
-  choices: [
-    'Tender only 只限招標',
-    'Large contracts only 只限大合同',
-    'Full lifecycle 整個周期',
-    'Post-award only 中標後'
-  ],
-  correct: 2
-},
-{
-  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-  choices: [
-    'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-    'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-    'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-    'Supplier monitors upstream suppliers against sustainability criteria供 應商按可持續標準監察上游供應商'
-  ],
-  correct: 2
-},
-{
-  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-  choices: [
-    'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-    'Yes, but only for large suppliers 是，但只適用於大型供應商',
-    'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-    'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
-  ],
-  correct: 2
-},
-{
-  question: `Which of the following combinations are covered under the HSSE (Health, Safety, Security & Environment) dimension in the ESG Criteria Framework? / 以下哪些組合屬於 ESG 準則框架中 HSSE（健康、安全、保安及環境）範疇？
-Items: (1) Energy Consumption 能源消耗;
-(2) Product End-of-Life Management 產品生命週期完結管理;
-(3) Social & Community 社會及社區;
-(4) Logistic Plan 物流計劃`,
-  choices: [
-    '(1) and (2) only 只有 (1) 及 (2)',
-    '(2) and (4) only 只有 (2) 及 (4)',
-    '(1), (2) and (3) only 只有 (1), (2) 及 (3)',
-    '(1) and (3) only 只有 (1) 及 (3)'
-  ],
-  correct: 3
-}
-];
-const QUESTIONS_SUPPLIER = [
-{
-  question: 'What does CLP expect suppliers to do with their upstream suppliers? CLP 期望供應商如何管理其上游供應商？',
-  choices: [
-    'Ignore upstream suppliers 不用理會上游供應商',
-    'Monitor and manage upstream supplier performance against similar expectations 按類似期望監察及管理上游供應商表現',
-    'Only ask for lowest price 只要求最低價',
-    'Hide upstream supplier information 隱瞞上游供應商資料'
-  ],
-  correct: 1
-},
-{
-  question: 'Which of the following is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct? CLP 期望供應商如何管理其上游供應商？',
-  choices: [
-    'Revenue Growth 收入增長',
-    'Climate Change 氣候變化',
-    'Marketing Strategy 市場策略',
-    'Branding 品牌管理'
-  ],
-  correct: 1
-},
-{
-  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-  choices: [
-    'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-    'Yes, but only for large suppliers 是，但只適用於大型供應商',
-    'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-    'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
-  ],
-  correct: 2
-},
-{
-  question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
-  choices: [
-    'Financial audit 財務審計',
-    'Sustainability assessment of suppliers 供應商可持續評分',
-    'Contract signing 合約簽署',
-    'Payment processing 付款處理'
-  ],
-  correct: 1
-},
-{
-  question: 'Which areas are typically covered in EcoVadis assessment? 主要用於什麼用途？',
-  choices: [
-    'Marketing and branding 市場推廣',
-    'Environment, Labour & Human Rights, Ethics, Sustainable Procurement 環境、勞工及人權、道德、可持續採購',
-    'IT systems only 只 IT 系統',
-    'Pricing strategy 定價策略'
-  ],
-  correct: 1
-},
-{
-  question: 'Which supplier demonstrates the strongest evidence of sustainability performance?  哪個供應商最有力證明其可持續發展表現？',
-  choices: [
-    'We care about ESG. 我們重視 ESG。',
-    'We support sustainability and have a green logo. 我們支持可持續發展並使用綠色標誌。',
-    'We have GHG data, reduction targets, environmental management systems, and public sustainability disclosures. 我們有排放數據、減排目標、環境管理系統及公開披露。',
-    'We plan to start ESG next year. 我們計劃明年開始做 ESG。'
-  ],
-  correct: 2
-},
-{
-  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-  choices: [
-    'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-    'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-    'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-    'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
-  ],
-  correct: 2
-},
-{
-  question: 'Which of the following is NOT one of the 11 SCoC topics? 哪項不是 SCoC 的 11 個主題？',
-  choices: [
-    'Climate Change 氣候變化',
-    'Business Ethics 商業道德',
-    'Profit and Loss 營收表現',
-    'Community Relations 社區關係'
-  ],
-  correct: 2
-}
-];
-const QUESTIONS_BUSINESS_USER = [
-{
-  question: 'What is BU\'s role in sustainable procurement? BU 在可持續採購中的角色是什麼？',
-  choices: [
-    'Approve PR only 只批 PR',
-    'Embed sustainability requirements in the technical specification 制定可持續要求',
-    'Ignore procurement 不參與',
-    'Payment only 只付款'
-  ],
-  correct: 1
-},
-{
-  question: 'BU promotes sustainability by: BU 如何推動可持續發展？',
-  choices: [
-    'Price pressure only 只壓價',
-    'Supplier engagement & innovation 供應商協作與創新',
-    'No communication 不溝通',
-    'Reduce scope 縮範圍'
-  ],
-  correct: 1
-},
-{
-  question: 'Which SCoC topic focuses on protecting employees from workplace hazards? 哪個 SCoC 主題主要關注員工職業安全？',
-  choices: [
-    'Climate Change 氣候變化',
-    'Community Relations 社區關係',
-    'Employee Health and Safety 員工健康與安全',
-    'Cybersecurity 網絡安全'
-  ],
-  correct: 2
-},
-{
-  question: 'Which action best demonstrates the \'S\' (Social) aspect of ESG according to CLP\'s Supplier Code of Conduct? 以下哪項最能代表 CLP SCoC 中 ESG 的「S」（社會）元素？',
-  choices: [
-    'Switching to LED lighting 改用 LED 燈',
-    'Measuring GHG emissions 量度溫室氣體排放', 
-    'protecting workers and supporting communities 防止歧視、保障員工及支持社區',
-    'Improving IT systems 改善 IT 系統'
-  ],
-  correct: 2
-},
-{
-  question: 'Which SCoC topic promotes equal treatment and prevents discrimination? 哪個 SCoC 主題提倡平等及防止歧視？',
-  choices: [
-    'Diversity and Inclusion 多元共融',
-    'Climate Change 氣候變化',
-    'Quality and Safety 質量及安全',
-    'Community Relations 社區關係'
-  ],
-  correct: 0
-},
-{
-  question: 'What does the acronym ESG stand for in the context of sustainable business practices? 在可持續商業實踐中，ESG 代表什麼？',
-  choices: [
-    'Efficiency, Safety and Growth 效率、安全與增長',
-    'Economy, Sustainability and Governance 經濟、可持續發展與管治',
-    'Energy, Strategy and Growth 環境、社會與管治',
-    'Environment, Social and Governance 環境、社會與管治'
-  ],
-  correct: 3
-},
-{
-  question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-  choices: [
-    'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-    'Yes, but only for large suppliers 是，但只適用於大型供應商',
-    'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-    'No. SCoC is only voluntary guidance  否，供應商行為守則只是自願性指引'
-  ],
-  correct: 2
-},
-{
-  question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-  choices: [
-    'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-    'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-    'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-    'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
-  ],
-  correct: 2
-}
-];
+        const QUESTIONS_BUYER = [{
+            question: 'Which SCoC topic is most closely related to supplier carbon reduction efforts? 哪個 SCoC 主題最直接與供應商減碳工作有關？',
+            choices: [
+                'Community Relations 社區關係',
+                'Climate Change 氣候變化',
+                'Cybersecurity 網絡安全',
+                'Business Ethics 商業道德'
+            ],
+            correct: 1,
+            explanation: 'Climate Change is the SCoC topic that directly addresses carbon reduction, emissions management, and climate-related impacts.'
+        }, {
+            question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
+            choices: [
+                'Financial audit 財務審計',
+                'Sustainability assessment of suppliers 供應商可持續評分',
+                'Contract signing 合約簽署',
+                'Payment processing 付款處理'
+            ],
+            correct: 1,
+            explanation: 'EcoVadis is a leading platform for assessing and rating suppliers\' sustainability performance across environmental, social, and ethical dimensions.'
+        }, {
+            question: 'Which EcoVadis pillar aligns most with anti-bribery requirements? EcoVadis 哪個範疇最符合反貪污要求？',
+            choices: [
+                'Environment 環境',
+                'Ethics 商業道德',
+                'Labour & Human Rights 勞工及人權',
+                'Sustainable Procurement 可持續採購'
+            ],
+            correct: 1,
+            explanation: 'The Ethics pillar covers anti-corruption, anti-bribery, and fair business practices.'
+        }, {
+            question: 'Which SCoC topic promotes equal treatment and prevents discrimination? 哪個 SCoC 主題提倡平等及防止歧視？',
+            choices: [
+                'Diversity and Inclusion 多元共融',
+                'Climate Change 氣候變化',
+                'Quality and Safety 質量及安全',
+                'Community Relations 社區關係'
+            ],
+            correct: 0,
+            explanation: 'Diversity and Inclusion focuses on equal opportunity, non-discrimination, and creating an inclusive workplace.'
+        }, {
+            question: 'Supplier Code of Conduct applies to: 供應商行為守則適用於？',
+            choices: [
+                'Tender only 只限招標',
+                'Large contracts only 只限大合同',
+                'Full lifecycle 整個周期',
+                'Post-award only 中標後'
+            ],
+            correct: 2,
+            explanation: 'The Supplier Code of Conduct applies throughout the entire lifecycle of the supplier relationship, from selection to ongoing performance management.'
+        }, {
+            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
+            choices: [
+                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
+                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
+                'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
+                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
+            ],
+            correct: 2,
+            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
+        }, {
+            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
+            choices: [
+                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
+                'Yes, but only for large suppliers 是，但只適用於大型供應商',
+                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
+                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
+            ],
+            correct: 2,
+            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
+        }, {
+            question: 'Which of the following combinations are covered under the HSSE (Health, Safety, Security & Environment) dimension in the ESG Criteria Framework? 以下哪些組合屬於 ESG 準則框架中 HSSE（健康、安全、保安及環境）範疇？ Items: (1) Energy Consumption 能源消耗; (2) Product End-of-Life Management 產品生命週期完結管理; (3) Social & Community 社會及社區; (4) Logistic Plan 物流計劃',
+            choices: [
+                '(1) and (2) only 只有 (1) 及 (2)',
+                '(2) and (4) only 只有 (2) 及 (4)',
+                '(1), (2) and (3) only 只有 (1), (2) 及 (3)',
+                '(1) and (3) only 只有 (1) 及 (3)'
+            ],
+            correct: 3,
+            explanation: 'HSSE covers Energy Consumption (1) and Social & Community (3) aspects. Product end-of-life and logistics are covered under other dimensions.'
+        }];
+
+        const QUESTIONS_SUPPLIER = [{
+            question: 'What does CLP expect suppliers to do with their upstream suppliers? CLP 期望供應商如何管理其上游供應商？',
+            choices: [
+                'Ignore upstream suppliers 不用理會上游供應商',
+                'Monitor and manage upstream supplier performance against similar expectations 按類似期望監察及管理上游供應商表現',
+                'Only ask for lowest price 只要求最低價',
+                'Hide upstream supplier information 隱瞞上游供應商資料'
+            ],
+            correct: 1,
+            explanation: 'CLP expects suppliers to extend similar sustainability expectations to their own upstream suppliers, creating a responsible supply chain.'
+        }, {
+            question: 'Which of the following is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct? CLP 期望供應商如何管理其上游供應商？',
+            choices: [
+                'Revenue Growth 收入增長',
+                'Climate Change 氣候變化',
+                'Marketing Strategy 市場策略',
+                'Branding 品牌管理'
+            ],
+            correct: 1,
+            explanation: 'Climate Change is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct.'
+        }, {
+            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
+            choices: [
+                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
+                'Yes, but only for large suppliers 是，但只適用於大型供應商',
+                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
+                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
+            ],
+            correct: 2,
+            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
+        }, {
+            question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
+            choices: [
+                'Financial audit 財務審計',
+                'Sustainability assessment of suppliers 供應商可持續評分',
+                'Contract signing 合約簽署',
+                'Payment processing 付款處理'
+            ],
+            correct: 1,
+            explanation: 'EcoVadis is a leading platform for assessing and rating suppliers\' sustainability performance.'
+        }, {
+            question: 'Which areas are typically covered in EcoVadis assessment? EcoVadis 評估通常涵蓋哪些範疇？',
+            choices: [
+                'Marketing and branding 市場推廣',
+                'Environment, Labour & Human Rights, Ethics, Sustainable Procurement 環境、勞工及人權、道德、可持續採購',
+                'IT systems only 只 IT 系統',
+                'Pricing strategy 定價策略'
+            ],
+            correct: 1,
+            explanation: 'EcoVadis assesses suppliers across four pillars: Environment, Labour & Human Rights, Ethics, and Sustainable Procurement.'
+        }, {
+            question: 'Which supplier demonstrates the strongest evidence of sustainability performance? 哪個供應商最有力證明其可持續發展表現？',
+            choices: [
+                'We care about ESG. 我們重視 ESG。',
+                'We support sustainability and have a green logo. 我們支持可持續發展並使用綠色標誌。',
+                'We have GHG data, reduction targets, environmental management systems, and public sustainability disclosures. 我們有排放數據、減排目標、環境管理系統及公開披露。',
+                'We plan to start ESG next year. 我們計劃明年開始做 ESG。'
+            ],
+            correct: 2,
+            explanation: 'Concrete data, targets, management systems, and public disclosure provide the strongest evidence of actual sustainability performance.'
+        }, {
+            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
+            choices: [
+                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
+                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
+                'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
+                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
+            ],
+            correct: 2,
+            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
+        }, {
+            question: 'Which of the following is NOT one of the 11 SCoC topics? 哪項不是 SCoC 的 11 個主題？',
+            choices: [
+                'Climate Change 氣候變化',
+                'Business Ethics 商業道德',
+                'Profit and Loss 營收表現',
+                'Community Relations 社區關係'
+            ],
+            correct: 2,
+            explanation: 'Profit and Loss is a financial metric, not one of the 11 sustainability topics in the Supplier Code of Conduct.'
+        }];
+
+        const QUESTIONS_BUSINESS_USER = [{
+            question: 'What is BU\'s role in sustainable procurement? BU 在可持續採購中的角色是什麼？',
+            choices: [
+                'Approve PR only 只批 PR',
+                'Embed sustainability requirements in the technical specification 制定可持續要求',
+                'Ignore procurement 不參與',
+                'Payment only 只付款'
+            ],
+            correct: 1,
+            explanation: 'Business Users play a key role by embedding sustainability requirements into technical specifications and project scopes.'
+        }, {
+            question: 'BU promotes sustainability by: BU 如何推動可持續發展？',
+            choices: [
+                'Price pressure only 只壓價',
+                'Supplier engagement & innovation 供應商協作與創新',
+                'No communication 不溝通',
+                'Reduce scope 縮範圍'
+            ],
+            correct: 1,
+            explanation: 'Business Users drive sustainability through active supplier engagement, collaboration, and encouraging innovation.'
+        }, {
+            question: 'Which SCoC topic focuses on protecting employees from workplace hazards? 哪個 SCoC 主題主要關注員工職業安全？',
+            choices: [
+                'Climate Change 氣候變化',
+                'Community Relations 社區關係',
+                'Employee Health and Safety 員工健康與安全',
+                'Cybersecurity 網絡安全'
+            ],
+            correct: 2,
+            explanation: 'Employee Health and Safety covers workplace safety, hazard prevention, and employee wellbeing.'
+        }, {
+            question: 'Which action best demonstrates the \'S\' (Social) aspect of ESG according to CLP\'s Supplier Code of Conduct? 以下哪項最能代表 CLP SCoC 中 ESG 的「S」（社會）元素？',
+            choices: [
+                'Switching to LED lighting 改用 LED 燈',
+                'Measuring GHG emissions 量度溫室氣體排放',
+                'Protecting workers and supporting communities 防止歧視、保障員工及支持社區',
+                'Improving IT systems 改善 IT 系統'
+            ],
+            correct: 2,
+            explanation: 'The Social aspect covers fair treatment of workers, non-discrimination, community support, and social responsibility.'
+        }, {
+            question: 'Which SCoC topic promotes equal treatment and prevents discrimination? 哪個 SCoC 主題提倡平等及防止歧視？',
+            choices: [
+                'Diversity and Inclusion 多元共融',
+                'Climate Change 氣候變化',
+                'Quality and Safety 質量及安全',
+                'Community Relations 社區關係'
+            ],
+            correct: 0,
+            explanation: 'Diversity and Inclusion focuses on equal opportunity, non-discrimination, and creating an inclusive workplace.'
+        }, {
+            question: 'What does the acronym ESG stand for in the context of sustainable business practices? 在可持續商業實踐中，ESG 代表什麼？',
+            choices: [
+                'Efficiency, Safety and Growth 效率、安全與增長',
+                'Economy, Sustainability and Governance 經濟、可持續發展與管治',
+                'Energy, Strategy and Growth 環境、社會與管治',
+                'Environment, Social and Governance 環境、社會與管治'
+            ],
+            correct: 3,
+            explanation: 'ESG stands for Environment, Social, and Governance — the three core pillars of sustainable business practices.'
+        }, {
+            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
+            choices: [
+                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
+                'Yes, but only for large suppliers 是，但只適用於大型供應商',
+                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
+                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
+            ],
+            correct: 2,
+            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
+        }, {
+            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
+            choices: [
+                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
+                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
+                'Supplier says \'we are sustainable\' in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
+                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
+            ],
+            correct: 2,
+            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
+        }];
+
         // ============================================================
         //  GAME STATE
         // ============================================================
         const state = {
             identity: null,
             currentQuestion: 0,
-            score: 0,
-            totalCorrect: 0,
+            correctCount: 0,
+            treesGreen: 0,
             isAnswering: false,
             gameOver: false,
-            questions: [], // will be set based on identity
+            questions: [],
         };
 
         const LETTERS = ['A', 'B', 'C', 'D'];
-        const SCORE_PER_QUESTION = 125000;
+        const TOTAL_QUESTIONS = 8;
+        const TREE_IMAGES = {
+            grey: 'grey-tree.png',
+            green: 'green-tree.png'
+        };
 
         // ============================================================
         //  DOM REFS
@@ -1210,6 +1273,8 @@ const QUESTIONS_BUSINESS_USER = [
         const $ = (id) => document.getElementById(id);
         const app = $('app');
         const screens = {
+            poster: $('poster'),
+            userGuide: $('user-guide'),
             landing: $('landing'),
             identity: $('identity-select'),
             questionNumber: $('question-number'),
@@ -1217,8 +1282,51 @@ const QUESTIONS_BUSINESS_USER = [
             result: $('result'),
             final: $('final'),
         };
-        const scoreDisplay = $('scoreDisplay');
-        const scoreAmount = $('scoreAmount');
+        const treeDisplay = $('treeDisplay');
+        const treeGrid = $('treeGrid');
+
+        // ============================================================
+        //  TREE MANAGEMENT
+        // ============================================================
+        function buildTrees() {
+            treeGrid.innerHTML = '';
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const img = document.createElement('img');
+                img.className = 'tree-icon grey';
+                img.src = TREE_IMAGES.grey;
+                img.alt = 'Tree ' + (i + 1);
+                img.dataset.index = i;
+                img.dataset.state = 'grey';
+                treeGrid.appendChild(img);
+            }
+        }
+
+        function updateTrees(greenCount) {
+            const icons = treeGrid.querySelectorAll('.tree-icon');
+            icons.forEach((img, idx) => {
+                if (idx < greenCount) {
+                    if (img.dataset.state !== 'green') {
+                        img.src = TREE_IMAGES.green;
+                        img.className = 'tree-icon green bounce';
+                        img.dataset.state = 'green';
+                        // remove bounce after animation
+                        setTimeout(() => {
+                            img.classList.remove('bounce');
+                        }, 600);
+                    }
+                } else {
+                    if (img.dataset.state !== 'grey') {
+                        img.src = TREE_IMAGES.grey;
+                        img.className = 'tree-icon grey';
+                        img.dataset.state = 'grey';
+                    }
+                }
+            });
+        }
+
+        function showTrees(show) {
+            treeDisplay.style.display = show ? 'block' : 'none';
+        }
 
         // ============================================================
         //  SCREEN MANAGEMENT
@@ -1229,17 +1337,6 @@ const QUESTIONS_BUSINESS_USER = [
             });
         }
 
-        function applyTheme(identity) {
-            app.className = 'theme-' + identity;
-        }
-
-        function updateScore() {
-            scoreAmount.textContent = state.score.toLocaleString();
-        }
-
-        // ============================================================
-        //  IDENTITY LABEL HELPERS
-        // ============================================================
         function setIdentityLabels() {
             const labelMap = {
                 buyer: 'Buyer',
@@ -1270,11 +1367,27 @@ const QUESTIONS_BUSINESS_USER = [
                 spark.style.animationDelay = (Math.random() * 5) + 's';
                 spark.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
                 const hue = 45 + Math.random() * 10;
-                spark.style.background = `radial-gradient(circle, hsl(${hue}, 100%, 70%), hsl(${hue}, 100%, 40%))`;
+                spark.style.background =
+                    `radial-gradient(circle, hsl(${hue}, 100%, 70%), hsl(${hue}, 100%, 40%))`;
                 spark.style.boxShadow = `0 0 8px 2px rgba(255, 215, 0, ${0.2 + Math.random() * 0.4})`;
                 container.appendChild(spark);
             }
         }
+
+        // ============================================================
+        //  POSTER & USER GUIDE NAVIGATION
+        // ============================================================
+        $('btnPosterNext').addEventListener('click', () => {
+            Sound.click();
+            showScreen('userGuide');
+            Sound.transition();
+        });
+
+        $('btnGuideNext').addEventListener('click', () => {
+            Sound.click();
+            showScreen('landing');
+            Sound.startGame();
+        });
 
         // ============================================================
         //  LANDING
@@ -1292,8 +1405,6 @@ const QUESTIONS_BUSINESS_USER = [
             card.addEventListener('click', () => {
                 const id = card.dataset.identity;
                 state.identity = id;
-                applyTheme(id);
-                Sound.selectIdentity();
 
                 // Load the correct question set
                 if (id === 'buyer') {
@@ -1306,15 +1417,20 @@ const QUESTIONS_BUSINESS_USER = [
 
                 // Reset game state
                 state.currentQuestion = 0;
-                state.score = 0;
-                state.totalCorrect = 0;
+                state.correctCount = 0;
+                state.treesGreen = 0;
                 state.gameOver = false;
                 state.isAnswering = false;
-                updateScore();
-                scoreDisplay.style.display = 'flex';
+
+                // Reset trees
+                buildTrees();
+                updateTrees(0);
+                showTrees(true);
+
                 setIdentityLabels();
                 showQuestionNumber();
                 showScreen('questionNumber');
+                Sound.selectIdentity();
             });
         });
 
@@ -1383,16 +1499,16 @@ const QUESTIONS_BUSINESS_USER = [
             });
 
             if (isCorrect) {
-                state.score += SCORE_PER_QUESTION;
-                state.totalCorrect += 1;
+                state.correctCount += 1;
+                state.treesGreen += 1;
+                updateTrees(state.treesGreen);
                 Sound.correct();
             } else {
                 Sound.wrong();
             }
-            updateScore();
 
             setTimeout(() => {
-                showResult(isCorrect, q.explanation);
+                showResult(isCorrect, q.explanation || '');
             }, 700);
         }
 
@@ -1404,8 +1520,7 @@ const QUESTIONS_BUSINESS_USER = [
             const title = $('resTitle');
             title.textContent = isCorrect ? 'Correct!' : 'Wrong!';
             title.className = 'result-title ' + (isCorrect ? 'correct' : 'wrong');
-            $('resScoreChange').textContent = isCorrect ? '+ HK$125,000' : '+ HK$0';
-            $('resExplanation').textContent = explanation;
+            $('resExplanation').textContent = explanation || (isCorrect ? 'Great work!' : 'Keep learning!');
             setIdentityLabels();
 
             const nextBtn = $('btnNextQuestion');
@@ -1436,25 +1551,40 @@ const QUESTIONS_BUSINESS_USER = [
         // ============================================================
         function showFinal() {
             state.gameOver = true;
-            scoreDisplay.style.display = 'none';
-            $('finalAmount').textContent = 'HK$' + state.score.toLocaleString();
+            showTrees(false);
+
+            const total = state.correctCount;
+            $('finalTreeCount').textContent = total + ' / ' + TOTAL_QUESTIONS;
+
+            // Show final tree display
+            const finalTreeContainer = $('finalTreeDisplay');
+            finalTreeContainer.innerHTML = '';
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const img = document.createElement('img');
+                img.src = i < total ? TREE_IMAGES.green : TREE_IMAGES.grey;
+                img.alt = 'Tree ' + (i + 1);
+                img.style.width = '40px';
+                img.style.height = '40px';
+                img.style.objectFit = 'contain';
+                img.style.filter = i < total ? 'drop-shadow(0 0 8px rgba(76,175,80,0.5))' : 'none';
+                finalTreeContainer.appendChild(img);
+            }
+
             const identityMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
             $('finalIdentity').textContent = identityMap[state.identity] || '—';
 
-            const total = state.totalCorrect;
             let msg = '';
-            if (total === 8) msg = '🌟 Perfect! You are a true supply chain master! 🌟';
-            else if (total >= 6) msg = '🏅 Outstanding! You have exceptional supply chain knowledge!';
-            else if (total >= 4) msg = '👏 Great job! You know your supply chain well!';
+            if (total === 8) msg = '🌟 Perfect! You are a true sustainability champion! 🌟';
+            else if (total >= 6) msg = '🏅 Outstanding! You have exceptional sustainability knowledge!';
+            else if (total >= 4) msg = '👏 Great job! You know your sustainability well!';
             else if (total >= 2) msg = '💪 Not bad! Keep learning and you\'ll improve!';
-            else msg = '📚 Keep studying the supply chain — you\'ll get there!';
+            else msg = '📚 Keep studying sustainability — you\'ll get there!';
             $('finalCongrats').textContent = msg;
 
-            applyTheme(state.identity);
             showScreen('final');
             Sound.final();
 
-            setIdentityLabels();
+            // set identity label on final
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
                 const labelMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
@@ -1466,13 +1596,13 @@ const QUESTIONS_BUSINESS_USER = [
             Sound.click();
             state.identity = null;
             state.currentQuestion = 0;
-            state.score = 0;
-            state.totalCorrect = 0;
+            state.correctCount = 0;
+            state.treesGreen = 0;
             state.gameOver = false;
             state.isAnswering = false;
             state.questions = [];
-            scoreDisplay.style.display = 'none';
-            applyTheme('buyer');
+            showTrees(false);
+            buildTrees();
             showScreen('landing');
         });
 
@@ -1497,13 +1627,13 @@ const QUESTIONS_BUSINESS_USER = [
         // ============================================================
         //  INIT
         // ============================================================
-        showScreen('landing');
-        applyTheme('buyer');
-        scoreDisplay.style.display = 'none';
+        showScreen('poster');
+        buildTrees();
+        showTrees(false);
         createSparkles();
 
-        console.log('🎯 Who Wants to Be a Millionaire – Supply Chain Edition loaded!');
-        console.log('📖 Answer 8 questions correctly to win up to HK$1,000,000!');
+        console.log('🌱 Who Wants to Be a Sustainable Millionaire – Supply Chain Edition loaded!');
+        console.log('🌳 Answer 8 questions correctly to grow all trees green!');
     </script>
 
 </body>
