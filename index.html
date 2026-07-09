@@ -1010,15 +1010,15 @@ const QUESTIONS_BUYER = [
   correct: 2
 },
 {
-  question: 'Which of the following combinations are covered under the HSSE (Health, Safety, Security & Environment) dimension in the ESG Criteria Framework? / 以下哪些組合屬於 ESG 準則框架中HSSE(健康、安全、保安及環境）範疇？ 
-Items: (1) Energy Consumption 能源消耗; 
-(2) Product End-of-Life Management 產品生命週期完結管理; 
-(3) Social & Community 社會及社區; 
-(4) Logistic Plan 物流計劃',
+  question: `Which of the following combinations are covered under the HSSE (Health, Safety, Security & Environment) dimension in the ESG Criteria Framework? / 以下哪些組合屬於 ESG 準則框架中 HSSE（健康、安全、保安及環境）範疇？
+Items: (1) Energy Consumption 能源消耗;
+(2) Product End-of-Life Management 產品生命週期完結管理;
+(3) Social & Community 社會及社區;
+(4) Logistic Plan 物流計劃`,
   choices: [
     '(1) and (2) only 只有 (1) 及 (2)',
-    '(2) and (4) only 只有 (1)、(2) 及 (3)',
-    '(1), (2) and (3) only 只有 (1) 及 (3)',
+    '(2) and (4) only 只有 (2) 及 (4)',
+    '(1), (2) and (3) only 只有 (1), (2) 及 (3)',
     '(1) and (3) only 只有 (1) 及 (3)'
   ],
   correct: 3
@@ -1438,7 +1438,7 @@ const QUESTIONS_BUSINESS_USER = [
             state.gameOver = true;
             scoreDisplay.style.display = 'none';
             $('finalAmount').textContent = 'HK$' + state.score.toLocaleString();
-            const identityMap = { buyer: 'Buyer', supplier: 'Supplier', business-user: 'Business User' };
+            const identityMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
             $('finalIdentity').textContent = identityMap[state.identity] || '—';
 
             const total = state.totalCorrect;
@@ -1457,7 +1457,7 @@ const QUESTIONS_BUSINESS_USER = [
             setIdentityLabels();
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
-                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', business-user: 'Business User' };
+                const labelMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
