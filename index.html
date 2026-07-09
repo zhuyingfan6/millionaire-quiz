@@ -61,7 +61,6 @@
 /* ----- Poster & User Guide ----- */
 .full-image-screen {
     background: #0a0a12;
-    padding: 0;
 }
 
 .full-image-screen .image-wrap {
@@ -91,13 +90,6 @@
     pointer-events: none;        /* container doesn't block */
 }
 
-/* Button itself - normal size, clickable */
-.full-image-screen .btn-overlay .btn {
-    pointer-events: auto;
-    cursor: pointer;
-    padding: 48px 144px;
-    font-size: clamp(2.5rem, 3.0vw, 3.2rem); /* scales with screen */
-}
 /* Hidden screen's button - NOT clickable */
 .full-image-screen:not(.active) .btn-overlay .btn {
     pointer-events: none;
