@@ -22,6 +22,16 @@
             overflow: hidden;
         }
 
+        /* ----- APP CONTAINER ----- */
+        #app {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: #0a0a12;
+            /* solid dark background */
+        }
+
         /* ----- COMMON ELEMENTS ----- */
         .screen {
             position: absolute;
@@ -35,6 +45,8 @@
             pointer-events: none;
             transition: opacity 0.6s ease, transform 0.6s ease;
             transform: scale(0.96);
+            background: #0a0a12;
+            /* default solid background */
         }
         .screen.active {
             opacity: 1;
@@ -42,6 +54,54 @@
             transform: scale(1);
         }
 
+        /* ----- Screens that use background.png ----- */
+        #question-number,
+        #choices,
+        #result,
+        #final {
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* ----- Poster & User Guide (full image) ----- */
+        .full-image-screen {
+            background: #0a0a12;
+            padding: 0;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .full-image-screen .image-wrap {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .full-image-screen .image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 100%;
+            max-height: 100%;
+            background: #0a0a12;
+        }
+        .full-image-screen .btn-overlay {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+        .full-image-screen .btn-overlay .btn {
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        /* ----- Buttons ----- */
         .btn {
             padding: 16px 48px;
             font-size: 1.4rem;
@@ -108,7 +168,6 @@
             border: 1px solid rgba(255, 215, 0, 0.15);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
             display: none;
-            /* hidden until game starts */;
         }
         #treeDisplay .tree-grid {
             display: grid;
@@ -152,76 +211,10 @@
             text-transform: uppercase;
         }
 
-        /* ----- POSTER & USER GUIDE SCREENS ----- */
-        .full-image-screen {
-            background: #0a0a12;
-            padding: 0;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-        .full-image-screen .image-wrap {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            position: relative;
-        }
-        .full-image-screen .image-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            max-width: 100%;
-            max-height: 100%;
-            background: #0a0a12;
-        }
-        .full-image-screen .btn-overlay {
-            position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-        }
-        .full-image-screen .btn-overlay .btn {
-            animation: pulseGlow 2.5s ease-in-out infinite;
-        }
-
-        /* ----- LANDING SCREEN ----- */
+        /* ----- LANDING SCREEN (no background design) ----- */
         #landing {
-            background: radial-gradient(ellipse at 50% 40%, #2a4a2a, #0a0a12);
+            background: #0a0a12;
             position: relative;
-            overflow: hidden;
-        }
-        #sparkle-field {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-        .spark {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ffd700, #f57f17);
-            box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.4);
-            animation: sparkleAnim 2s ease-in-out infinite alternate;
-            opacity: 0;
-        }
-        @keyframes sparkleAnim {
-            0% {
-                transform: scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            50% {
-                transform: scale(1.2) rotate(180deg);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(0.8) rotate(360deg);
-                opacity: 0.6;
-            }
         }
         #landing .content {
             position: relative;
@@ -274,9 +267,9 @@
             opacity: 0.8;
         }
 
-        /* ----- IDENTITY SCREEN ----- */
+        /* ----- IDENTITY SCREEN (solid) ----- */
         #identity-select {
-            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a12 100%);
+            background: #0a0a12;
         }
         #identity-select .identity-grid {
             display: flex;
@@ -360,9 +353,6 @@
         }
 
         /* ----- QUESTION NUMBER SCREEN ----- */
-        #question-number {
-            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
-        }
         #question-number .number-display {
             font-size: clamp(8rem, 25vw, 16rem);
             font-weight: 900;
@@ -400,9 +390,6 @@
         }
 
         /* ----- CHOICES SCREEN ----- */
-        #choices {
-            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
-        }
         #choices .question-text {
             font-size: clamp(1.2rem, 2.8vw, 2.2rem);
             font-weight: 600;
@@ -500,9 +487,6 @@
         }
 
         /* ----- RESULT SCREEN ----- */
-        #result {
-            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
-        }
         #result .result-icon {
             font-size: 5rem;
             margin-bottom: 0.5rem;
@@ -550,9 +534,6 @@
         }
 
         /* ----- FINAL SCREEN ----- */
-        #final {
-            background: radial-gradient(ellipse at 50% 40%, #1a2a1a, #0a0a12);
-        }
         #final .final-title {
             font-size: clamp(2.4rem, 6vw, 4.2rem);
             font-weight: 900;
@@ -625,40 +606,6 @@
             filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
-        /* ----- DECORATIVE CORNERS ----- */
-        .deco-corner {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 2px solid rgba(255, 215, 0, 0.06);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .deco-corner.tl {
-            top: 20px;
-            left: 20px;
-            border-right: none;
-            border-bottom: none;
-        }
-        .deco-corner.tr {
-            top: 20px;
-            right: 20px;
-            border-left: none;
-            border-bottom: none;
-        }
-        .deco-corner.bl {
-            bottom: 20px;
-            left: 20px;
-            border-right: none;
-            border-top: none;
-        }
-        .deco-corner.br {
-            bottom: 20px;
-            right: 20px;
-            border-left: none;
-            border-top: none;
-        }
-
         /* ----- RESPONSIVE ----- */
         @media (max-width: 768px) {
             .screen {
@@ -689,9 +636,6 @@
             }
             #final .final-stats {
                 padding: 1.2rem 2rem;
-            }
-            .deco-corner {
-                display: none;
             }
             #treeDisplay {
                 top: 12px;
@@ -783,11 +727,6 @@
 <body>
 
     <div id="app">
-        <!-- DECORATIVE CORNERS -->
-        <div class="deco-corner tl"></div>
-        <div class="deco-corner tr"></div>
-        <div class="deco-corner bl"></div>
-        <div class="deco-corner br"></div>
 
         <!-- TREE DISPLAY (top-right, hidden until game starts) -->
         <div id="treeDisplay">
@@ -819,7 +758,6 @@
 
         <!-- ===== LANDING ===== -->
         <div class="screen" id="landing">
-            <div id="sparkle-field"></div>
             <div class="content">
                 <div class="sub-title">Supply Chain Edition</div>
                 <div class="game-title">Who Wants to Be<br />a Sustainable Millionaire?</div>
@@ -1297,7 +1235,6 @@
                         img.src = TREE_IMAGES.green;
                         img.className = 'tree-icon green bounce';
                         img.dataset.state = 'green';
-                        // remove bounce after animation
                         setTimeout(() => {
                             img.classList.remove('bounce');
                         }, 600);
@@ -1338,31 +1275,6 @@
         }
 
         // ============================================================
-        //  SPARKLE EFFECT
-        // ============================================================
-        function createSparkles() {
-            const container = document.getElementById('sparkle-field');
-            if (!container) return;
-            const count = 60;
-            for (let i = 0; i < count; i++) {
-                const spark = document.createElement('div');
-                spark.className = 'spark';
-                const size = 3 + Math.random() * 8;
-                spark.style.width = size + 'px';
-                spark.style.height = size + 'px';
-                spark.style.left = Math.random() * 100 + '%';
-                spark.style.top = Math.random() * 100 + '%';
-                spark.style.animationDelay = (Math.random() * 5) + 's';
-                spark.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
-                const hue = 45 + Math.random() * 10;
-                spark.style.background =
-                    `radial-gradient(circle, hsl(${hue}, 100%, 70%), hsl(${hue}, 100%, 40%))`;
-                spark.style.boxShadow = `0 0 8px 2px rgba(255, 215, 0, ${0.2 + Math.random() * 0.4})`;
-                container.appendChild(spark);
-            }
-        }
-
-        // ============================================================
         //  POSTER & USER GUIDE NAVIGATION
         // ============================================================
         $('btnPosterNext').addEventListener('click', () => {
@@ -1394,7 +1306,6 @@
                 const id = card.dataset.identity;
                 state.identity = id;
 
-                // Load the correct question set
                 if (id === 'buyer') {
                     state.questions = QUESTIONS_BUYER;
                 } else if (id === 'supplier') {
@@ -1403,14 +1314,12 @@
                     state.questions = QUESTIONS_BUSINESS_USER;
                 }
 
-                // Reset game state
                 state.currentQuestion = 0;
                 state.correctCount = 0;
                 state.treesGreen = 0;
                 state.gameOver = false;
                 state.isAnswering = false;
 
-                // Reset trees
                 buildTrees();
                 updateTrees(0);
                 showTrees(true);
@@ -1544,7 +1453,6 @@
             const total = state.correctCount;
             $('finalTreeCount').textContent = total + ' / ' + TOTAL_QUESTIONS;
 
-            // Show final tree display
             const finalTreeContainer = $('finalTreeDisplay');
             finalTreeContainer.innerHTML = '';
             for (let i = 0; i < TOTAL_QUESTIONS; i++) {
@@ -1572,7 +1480,6 @@
             showScreen('final');
             Sound.final();
 
-            // set identity label on final
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
                 const labelMap = { buyer: 'Buyer', supplier: 'Supplier', 'business-user': 'Business User' };
@@ -1618,7 +1525,6 @@
         showScreen('poster');
         buildTrees();
         showTrees(false);
-        createSparkles();
 
         console.log('🌱 Who Wants to Be a Sustainable Millionaire – Supply Chain Edition loaded!');
         console.log('🌳 Answer 8 questions correctly to grow all trees green!');
