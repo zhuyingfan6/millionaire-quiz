@@ -148,22 +148,31 @@
         }
 
         /* ----- TREE DISPLAY (top-right) ----- */
-        #treeDisplay {
-            position: absolute;
-            top: 20px;
-            right: 24px;
-            z-index: 50;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(8px);
-            border-radius: 16px;
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            display: none;
-        }
+#treeDisplay {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    z-index: 50;
+
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+
+    border-radius: 16px;
+    padding: 8px 12px;
+
+    min-width: 220px;   /* <-- ADD THIS */
+
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+
+    display: none;
+}
+`
 #treeDisplay .tree-grid {
-    display: grid;
-    grid-template-columns: repeat(5, auto);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
     gap: 8px;
 }
         #treeDisplay .tree-icon {
