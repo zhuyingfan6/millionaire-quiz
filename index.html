@@ -614,9 +614,12 @@
 
 /* ----- 50:50 LIFELINE ----- */
 
+/* ----- 50:50 LIFELINE ----- */
+
 #fiftyFiftyBtn {
     position: fixed;
 
+    /* Adjust these two values if the button is slightly above/below the circle */
     bottom: 45px;
     left: 50%;
     transform: translateX(-50%);
@@ -625,21 +628,53 @@
     height: 90px;
 
     border-radius: 50%;
-    background: transparent;
-    border: none;
+    border: 2px solid rgba(255, 215, 0, 0.9);
+
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff7c2;
+
+    font-size: 1.45rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+
+    box-shadow:
+        0 0 18px rgba(255, 215, 0, 0.8),
+        inset 0 0 14px rgba(255, 215, 0, 0.35);
 
     cursor: pointer;
     z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#fiftyFiftyBtn:hover {
+    transform: translateX(-50%) scale(1.08);
+    box-shadow:
+        0 0 28px rgba(255, 215, 0, 1),
+        inset 0 0 18px rgba(255, 215, 0, 0.45);
 }
 
 #fiftyFiftyBtn.used {
     pointer-events: none;
-    opacity: 0.4;
+    opacity: 0.45;
 }
 
+/* The two removed wrong answers */
 .choice-btn.faded {
     opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
     transition: opacity 0.3s ease;
+}
+
+.choice-btn.faded:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
 }
         
         /* ----- RESPONSIVE ----- */
@@ -768,8 +803,9 @@
     <div class="tree-label">Progress</div>
 </div>
 
-<button id="fiftyFiftyBtn" title="50:50 Lifeline"></button>
-
+<button id="fiftyFiftyBtn" title="50:50 Lifeline" aria-label="50:50 Lifeline">
+    50:50
+</button>
 
     <!-- ===== POSTER ===== -->
     <div class="screen full-image-screen active" id="poster">
@@ -1184,8 +1220,14 @@ function showScreen(name) {
 
     const fiftyBtn = document.getElementById('fiftyFiftyBtn');
 
-    if (name === 'choices' && !state.fiftyUsed) {
-        fiftyBtn.style.display = 'block';
+    if (name === 'choices') {
+        fiftyBtn.style.display = 'flex';
+
+        if (state.fiftyUsed) {
+            fiftyBtn.classList.add('used');
+        } else {
+            fiftyBtn.classList.remove('used');
+        }
     } else {
         fiftyBtn.style.display = 'none';
     }
@@ -1284,9 +1326,13 @@ document
                 formatBilingual(q.question);
             setIdentityLabels();
 
-            const grid = $('choicesGrid');
-            grid.innerHTML = '';
-            state.isAnswering = false;
+const grid = $('choicesGrid');
+grid.innerHTML = '';
+state.isAnswering = false;
+
+/* Reset 50:50 for each new question */
+state.fiftyUsed = false;
+document.getElementById('fiftyFiftyBtn').classList.remove('used');
 
             q.choices.forEach((text, idx) => {
                 const btn = document.createElement('button');
@@ -1307,9 +1353,15 @@ btn.innerHTML =
             Sound.transition();
         }
 
-        function handleChoice(selected) {
-            if (state.isAnswering || state.gameOver) return;
-            state.isAnswering = true;
+function handleChoice(selected) {
+    if (state.isAnswering || state.gameOver) return;
+
+    const selectedButton = document.querySelector(`.choice-btn[data-index="${selected}"]`);
+
+    /* Do not allow choosing a faded answer */
+    if (selectedButton && selectedButton.classList.contains('faded')) return;
+
+    state.isAnswering = true;
 
             const q = state.questions[state.currentQuestion];
             const correct = q.correct;
@@ -1343,34 +1395,39 @@ btn.innerHTML =
 
 function useFiftyFifty() {
 
-    if (state.fiftyUsed) return;
+    if (state.fiftyUsed || state.isAnswering || state.gameOver) return;
+
+    const activeScreen = document.querySelector('.screen.active');
+    if (!activeScreen || activeScreen.id !== 'choices') return;
 
     const q = state.questions[state.currentQuestion];
-
     if (!q) return;
 
     const correctIndex = q.correct;
 
     const wrongIndexes = [];
 
-    q.choices.forEach((c, idx) => {
+    q.choices.forEach((choice, idx) => {
         if (idx !== correctIndex) {
             wrongIndexes.push(idx);
         }
     });
 
-    // Randomly choose 2 wrong answers
+    /* Randomly choose 2 wrong answers from the 3 wrong answers */
     wrongIndexes.sort(() => Math.random() - 0.5);
 
-    const removeIndexes = wrongIndexes.slice(0, 2);
+    const fadeIndexes = wrongIndexes.slice(0, 2);
 
     const buttons = document.querySelectorAll('.choice-btn');
 
-    removeIndexes.forEach(idx => {
-        buttons[idx].classList.add('faded');
+    fadeIndexes.forEach(idx => {
+        if (buttons[idx]) {
+            buttons[idx].classList.add('faded');
+        }
     });
 
-    state.fiftyUsed = false;
+    /* Mark lifeline as used for this question */
+    state.fiftyUsed = true;
 
     document
         .getElementById('fiftyFiftyBtn')
@@ -1484,12 +1541,11 @@ document
         //  KEYBOARD SHORTCUTS
         // ============================================================
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                const active = document.querySelector('.screen.active');
-                if (active) {
-                    const btn = active.querySelector('.btn:not(.disabled)');
-                    if (btn) btn.click();
-                }
+if (e.key >= '1' && e.key <= '4') {
+    const idx = parseInt(e.key) - 1;
+    const btn = document.querySelector(`.choice-btn[data-index="${idx}"]:not(.disabled):not(.faded)`);
+    if (btn) btn.click();
+}
             }
             if (e.key >= '1' && e.key <= '4') {
                 const idx = parseInt(e.key) - 1;
