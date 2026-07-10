@@ -1230,7 +1230,7 @@ function showScreen(name) {
 
 if (name === 'choices') {
     fiftyBtn.style.display = 'flex';
-    fiftyBtn.style.pointerEvents = 'auto';
+    fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
 
     if (state.fiftyUsed) {
         fiftyBtn.classList.add('used');
