@@ -377,26 +377,28 @@
         }
 
         /* ----- CHOICES ----- */
-        #choices .question-text {
-            font-size: clamp(1.0rem, 1.3vw, 1.6rem);
-            font-weight: 600;
-            text-align: center;
-            max-width: 60%;
-            margin-left:1.5rem
-            margin-right:1.5rem
-            margin-top: -1rem;
-            margin-bottom: 3.5rem;
-            line-height: 1.4;
-            color: #f0e9d8;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
-        }
-        #choices .choices-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.2rem;
-            max-width: 800px;
-            width: 90%;
-        }
+#choices .question-text {
+    width: 70%;
+    max-width: 900px;
+
+    font-size: clamp(1rem, 1.2vw, 1.6rem);
+
+    line-height: 1.5;
+    text-align: center;
+
+    margin: 0 auto 2.5rem auto;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+#choices .choices-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+
+    width: 65%;
+    max-width: 900px;
+}
         .choice-btn {
             padding: 18px 24px;
             font-size: 1.1rem;
@@ -436,9 +438,18 @@
         .choice-btn:active {
             transform: scale(0.97);
         }
-        .choice-btn .text {
-            flex: 1;
-        }
+.choice-btn .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.4;
+}
+
+.choice-btn .zh {
+    margin-top: 4px;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
         .choice-btn.correct {
             border-color: #4caf50;
             background: rgba(76, 175, 80, 0.25);
@@ -810,7 +821,7 @@
             <div class="final-sub">Congratulations on completing the challenge</div>
             <div class="final-stats">
                 <div class="stat-label">Trees Grown</div>
-                <div class="stat-number" id="finalTreeCount">0 / 8</div>
+                <div class="stat-number" id="finalTreeCount">0 / 5</div>
             </div>
             <div class="final-trees" id="finalTreeDisplay"></div>
             <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
@@ -941,65 +952,15 @@
             ],
             correct: 2,
             explanation: 'The Supplier Code of Conduct applies throughout the entire lifecycle of the supplier relationship, from selection to ongoing performance management.'
-        }, {
-            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-            choices: [
-                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-                'Supplier says "we are sustainable" in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
-            ],
-            correct: 2,
-            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
-        }, {
-            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-            choices: [
-                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-                'Yes, but only for large suppliers 是，但只適用於大型供應商',
-                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
-            ],
-            correct: 2,
-            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
-        }, {
-            question: 'Which of the following combinations are covered under the HSSE (Health, Safety, Security & Environment) dimension in the ESG Criteria Framework? 以下哪些組合屬於 ESG 準則框架中 HSSE（健康、安全、保安及環境）範疇？ Items: (1) Energy Consumption 能源消耗; (2) Product End-of-Life Management 產品生命週期完結管理; (3) Social & Community 社會及社區; (4) Logistic Plan 物流計劃',
-            choices: [
-                '(1) and (2) only 只有 (1) 及 (2)',
-                '(2) and (4) only 只有 (2) 及 (4)',
-                '(1), (2) and (3) only 只有 (1), (2) 及 (3)',
-                '(1) and (3) only 只有 (1) 及 (3)'
-            ],
-            correct: 3,
-            explanation: 'HSSE covers Energy Consumption (1) and Social & Community (3) aspects. Product end-of-life and logistics are covered under other dimensions.'
         }];
 
         const QUESTIONS_SUPPLIER = [{
-            question: 'What does CLP expect suppliers to do with their upstream suppliers? CLP 期望供應商如何管理其上游供應商？',
-            choices: [
-                'Ignore upstream suppliers 不用理會上游供應商',
-                'Monitor and manage upstream supplier performance against similar expectations 按類似期望監察及管理上游供應商表現',
-                'Only ask for lowest price 只要求最低價',
-                'Hide upstream supplier information 隱瞞上游供應商資料'
-            ],
-            correct: 1,
-            explanation: 'CLP expects suppliers to extend similar sustainability expectations to their own upstream suppliers, creating a responsible supply chain.'
-        }, {
             question: 'Which of the following is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct? CLP 期望供應商如何管理其上游供應商？',
             choices: ['Revenue Growth 收入增長', 'Climate Change 氣候變化', 'Marketing Strategy 市場策略',
                 'Branding 品牌管理'
             ],
             correct: 1,
             explanation: 'Climate Change is one of the 11 sustainability topics in CLP\'s Supplier Code of Conduct.'
-        }, {
-            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-            choices: [
-                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-                'Yes, but only for large suppliers 是，但只適用於大型供應商',
-                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
-            ],
-            correct: 2,
-            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
         }, {
             question: 'What is EcoVadis mainly used for? EcoVadis 主要用於什麼用途？',
             choices: ['Financial audit 財務審計', 'Sustainability assessment of suppliers 供應商可持續評分',
@@ -1027,16 +988,6 @@
             ],
             correct: 2,
             explanation: 'Concrete data, targets, management systems, and public disclosure provide the strongest evidence of actual sustainability performance.'
-        }, {
-            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-            choices: [
-                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-                'Supplier says "we are sustainable" in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
-            ],
-            correct: 2,
-            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
         }, {
             question: 'Which of the following is NOT one of the 11 SCoC topics? 哪項不是 SCoC 的 11 個主題？',
             choices: ['Climate Change 氣候變化', 'Business Ethics 商業道德', 'Profit and Loss 營收表現',
@@ -1082,37 +1033,26 @@
             ],
             correct: 0,
             explanation: 'Diversity and Inclusion focuses on equal opportunity, non-discrimination, and creating an inclusive workplace.'
-        }, {
-            question: 'What does the acronym ESG stand for in the context of sustainable business practices? 在可持續商業實踐中，ESG 代表什麼？',
-            choices: ['Efficiency, Safety and Growth 效率、安全與增長',
-                'Economy, Sustainability and Governance 經濟、可持續發展與管治',
-                'Energy, Strategy and Growth 環境、社會與管治',
-                'Environment, Social and Governance 環境、社會與管治'
-            ],
-            correct: 3,
-            explanation: 'ESG stands for Environment, Social, and Governance — the three core pillars of sustainable business practices.'
-        }, {
-            question: 'Must a supplier acknowledge CLP\'s Supplier Code of Conduct in order to become a supplier? 供應商是否必須確認遵守中電的供應商行為守則，才可成為供應商？',
-            choices: [
-                'Yes, but supplier must already achieve 100% compliance with every aspect 是，但供應商必須已完全符合所有方面的要求',
-                'Yes, but only for large suppliers 是，但只適用於大型供應商',
-                'Yes, CLP may work with suppliers to close gaps through enhancement plans 是，中電可與供應商合作，透過改善計劃彌補差距',
-                'No. SCoC is only voluntary guidance 否，供應商行為守則只是自願性指引'
-            ],
-            correct: 2,
-            explanation: 'Suppliers are expected to acknowledge the SCoC, and CLP works collaboratively with them to address any gaps through enhancement plans.'
-        }, {
-            question: 'Which option looks ESG-related but is the weakest evidence of SCoC alignment? 以下哪項看似與 ESG 有關，但其實最弱、最不能證明符合 SCoC？',
-            choices: [
-                'Supplier provides emissions data and reduction target 供應商提供排放數據及減排目標',
-                'Supplier has anti-bribery controls and conflict of interest process 供應商有反賄賂控制及利益衝突流程',
-                'Supplier says "we are sustainable" in a marketing brochure 供應商在宣傳冊寫「我們是可持續企業」',
-                'Supplier monitors upstream suppliers against sustainability criteria 供應商按可持續標準監察上游供應商'
-            ],
-            correct: 2,
-            explanation: 'A marketing claim without data, targets, or verification is the weakest evidence of actual sustainability performance.'
         }];
+        //  FUNCTION OF SEPARATING LINES
+        function formatBilingual(text) {
 
+    // Find first Chinese character
+    const chineseIndex = text.search(/[\u4e00-\u9fff]/);
+
+    if (chineseIndex === -1) {
+        return text;
+    }
+
+    const english = text.substring(0, chineseIndex).trim();
+    const chinese = text.substring(chineseIndex).trim();
+
+    return `
+        ${english}
+        <br>
+        <span class="zh">${chinese}</span>
+    `;
+}
         // ============================================================
         //  GAME STATE
         // ============================================================
@@ -1127,7 +1067,7 @@
         };
 
         const LETTERS = ['A', 'B', 'C', 'D'];
-        const TOTAL_QUESTIONS = 8;
+        const TOTAL_QUESTIONS = 5;
         const TREE_IMAGES = {
             grey: 'grey-tree.png',
             green: 'green-tree.png'
@@ -1283,7 +1223,8 @@
                 showFinal();
                 return;
             }
-            $('chQuestion').textContent = q.question;
+            $('chQuestion').innerHTML =
+                formatBilingual(q.question);
             setIdentityLabels();
 
             const grid = $('choicesGrid');
@@ -1294,8 +1235,13 @@
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn';
                 btn.dataset.index = idx;
-                btn.innerHTML =
-                    `<span class="letter">${LETTERS[idx]}</span><span class="text">${text}</span>`;
+btn.innerHTML =
+`
+<span class="letter">${LETTERS[idx]}</span>
+<span class="text">
+    ${formatBilingual(text)}
+</span>
+`;
                 btn.addEventListener('click', () => handleChoice(idx));
                 grid.appendChild(btn);
             });
@@ -1387,7 +1333,7 @@
                 img.style.width = '40px';
                 img.style.height = '40px';
                 img.style.objectFit = 'contain';
-                img.style.filter = i < total ? 'drop-shadow(0 0 8px rgba(76,175,80,0.5))' : 'none';
+                img.style.filter = i < total ? 'drop-shadow(0 0 8px rgba(76,175,0,0.5))' : 'none';
                 finalTreeContainer.appendChild(img);
             }
 
@@ -1395,9 +1341,9 @@
             $('finalIdentity').textContent = identityMap[state.identity] || '—';
 
             let msg = '';
-            if (total === 8) msg = '🌟 Perfect! You are a true sustainability champion! 🌟';
-            else if (total >= 6) msg = '🏅 Outstanding! You have exceptional sustainability knowledge!';
-            else if (total >= 4) msg = '👏 Great job! You know your sustainability well!';
+            if (total === 5) msg = '🌟 Perfect! You are a true sustainability champion! 🌟';
+            else if (total >= 4) msg = '🏅 Outstanding! You have exceptional sustainability knowledge!';
+            else if (total >= 3) msg = '👏 Great job! You know your sustainability well!';
             else if (total >= 2) msg = '💪 Not bad! Keep learning and you\'ll improve!';
             else msg = '📚 Keep studying sustainability — you\'ll get there!';
             $('finalCongrats').textContent = msg;
