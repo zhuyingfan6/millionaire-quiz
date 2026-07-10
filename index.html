@@ -27,32 +27,25 @@
 }
 
         /* ----- SCREENS ----- */
-.screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    transform: scale(0.96);
-    background: transparent;
-
-    /* Layer order for inactive screens */
-    z-index: 1;
-}
-
-.screen.active {
-    opacity: 1;
-    pointer-events: all;
-    transform: scale(1);
-
-    /* Active screen should be above inactive screens */
-    z-index: 2;
-}
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: scale(0.96);
+            background: transparent;
+        }
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
 
         /* ----- Background image for game screens ----- */
         #question-number,
@@ -155,32 +148,22 @@
         }
 
         /* ----- TREE DISPLAY (top-right) ----- */
-
-#treeDisplay {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-
-    width: 220px;
-
-    background: rgba(0,0,0,0.55);
-    backdrop-filter: blur(8px);
-
-    border-radius: 16px;
-    padding: 8px 12px;
-
-    border: 1px solid rgba(255,215,0,0.15);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
-
-    display: none;
-}
-
+        #treeDisplay {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            z-index: 50;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
 #treeDisplay .tree-grid {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(5, auto);
     gap: 8px;
 }
         #treeDisplay .tree-icon {
@@ -619,70 +602,6 @@
             filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
-/* ----- 50:50 LIFELINE ----- */
-
-#fiftyFiftyBtn {
-  position: fixed;
-
-  /* Put it at the bottom middle, aligned with the centre 50:50 circle */
-  left: 50%;
-  bottom: 52px;
-  transform: translateX(-50%);
-
-  width: 118px;
-  height: 90px;
-  border-radius: 50%;
-
-  background: rgba(3, 10, 28, 0.62);
-  border: 3px solid #d7a83f;
-
-  color: #ffffff;
-  font-size: 31px;
-  font-weight: 800;
-  letter-spacing: -1px;
-
-  display: none;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow:
-    0 0 10px rgba(215, 168, 63, 0.75),
-    inset 0 0 12px rgba(255, 255, 255, 0.05);
-
-  transition: all 0.25s ease;
-
-  /* Important: keep it above the game screens */
-  z-index: 9999;
-  pointer-events: auto;
-}
-
-#fiftyFiftyBtn:hover {
-  transform: translateX(-50%) scale(1.08);
-  background: rgba(10, 22, 50, 0.78);
-  box-shadow:
-    0 0 18px rgba(215, 168, 63, 0.95),
-    inset 0 0 12px rgba(255, 255, 255, 0.08);
-}
-
-#fiftyFiftyBtn.used {
-  pointer-events: none;
-  opacity: 0.45;
-}
-
-/* The two removed wrong answers */
-.choice-btn.faded {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-  transition: opacity 0.3s ease;
-}
-
-.choice-btn.faded:hover {
-  transform: none;
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.45);
-}
-        
         /* ----- RESPONSIVE ----- */
         @media (max-width: 768px) {
             .screen {
@@ -804,14 +723,10 @@
 <body>
 
     <!-- TREE DISPLAY (top-right, hidden until game starts) -->
-<div id="treeDisplay">
-    <div class="tree-grid" id="treeGrid"></div>
-    <div class="tree-label">Progress</div>
-</div>
-
-<button id="fiftyFiftyBtn" title="50:50 Lifeline" aria-label="50:50 Lifeline">
-    50:50
-</button>
+    <div id="treeDisplay">
+        <div class="tree-grid" id="treeGrid"></div>
+        <div class="tree-label">Progress</div>
+    </div>
 
     <!-- ===== POSTER ===== -->
     <div class="screen full-image-screen active" id="poster">
@@ -1141,16 +1056,15 @@
         // ============================================================
         //  GAME STATE
         // ============================================================
-const state = {
-    identity: null,
-    currentQuestion: 0,
-    correctCount: 0,
-    treesGreen: 0,
-    isAnswering: false,
-    gameOver: false,
-    questions: [],
-    fiftyUsed: false
-};
+        const state = {
+            identity: null,
+            currentQuestion: 0,
+            correctCount: 0,
+            treesGreen: 0,
+            isAnswering: false,
+            gameOver: false,
+            questions: [],
+        };
 
         const LETTERS = ['A', 'B', 'C', 'D'];
         const TOTAL_QUESTIONS = 5;
@@ -1218,30 +1132,11 @@ const state = {
         // ============================================================
         //  SCREEN MANAGEMENT
         // ============================================================
-function showScreen(name) {
-
+        function showScreen(name) {
+    console.log('showScreen called with:', name);   // ← add this
     Object.keys(screens).forEach((key) => {
         screens[key].classList.toggle('active', key === name);
     });
-
-    const fiftyBtn = document.getElementById('fiftyFiftyBtn');
-
-    if (!fiftyBtn) return;
-
-    if (name === 'choices') {
-        fiftyBtn.style.display = 'flex';
-        fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
-
-        if (state.fiftyUsed) {
-            fiftyBtn.classList.add('used');
-        } else {
-            fiftyBtn.classList.remove('used');
-        }
-
-    } else {
-        fiftyBtn.style.display = 'none';
-        fiftyBtn.style.pointerEvents = 'none';
-    }
 }
 
         function setIdentityLabels() {
@@ -1288,16 +1183,11 @@ function showScreen(name) {
                     id === 'supplier' ? QUESTIONS_SUPPLIER :
                     QUESTIONS_BUSINESS_USER;
 
-state.currentQuestion = 0;
-state.correctCount = 0;
-state.treesGreen = 0;
-state.gameOver = false;
-state.isAnswering = false;
-state.fiftyUsed = false;
-
-document
-    .getElementById('fiftyFiftyBtn')
-    .classList.remove('used');
+                state.currentQuestion = 0;
+                state.correctCount = 0;
+                state.treesGreen = 0;
+                state.gameOver = false;
+                state.isAnswering = false;
 
                 buildTrees();
                 updateTrees(0);
@@ -1337,13 +1227,9 @@ document
                 formatBilingual(q.question);
             setIdentityLabels();
 
-const grid = $('choicesGrid');
-grid.innerHTML = '';
-state.isAnswering = false;
-
-/* Reset 50:50 for each new question */
-state.fiftyUsed = false;
-document.getElementById('fiftyFiftyBtn').classList.remove('used');
+            const grid = $('choicesGrid');
+            grid.innerHTML = '';
+            state.isAnswering = false;
 
             q.choices.forEach((text, idx) => {
                 const btn = document.createElement('button');
@@ -1364,15 +1250,9 @@ btn.innerHTML =
             Sound.transition();
         }
 
-function handleChoice(selected) {
-    if (state.isAnswering || state.gameOver) return;
-
-    const selectedButton = document.querySelector(`.choice-btn[data-index="${selected}"]`);
-
-    /* Do not allow choosing a faded answer */
-    if (selectedButton && selectedButton.classList.contains('faded')) return;
-
-    state.isAnswering = true;
+        function handleChoice(selected) {
+            if (state.isAnswering || state.gameOver) return;
+            state.isAnswering = true;
 
             const q = state.questions[state.currentQuestion];
             const correct = q.correct;
@@ -1400,53 +1280,6 @@ function handleChoice(selected) {
             }, 700);
         }
 
-// ============================================================
-//  50:50 LIFELINE
-// ============================================================
-
-function useFiftyFifty() {
-
-    if (state.fiftyUsed || state.isAnswering || state.gameOver) return;
-
-    const activeScreen = document.querySelector('.screen.active');
-    if (!activeScreen || activeScreen.id !== 'choices') return;
-
-    const q = state.questions[state.currentQuestion];
-    if (!q) return;
-
-    const correctIndex = q.correct;
-
-    const wrongIndexes = [];
-
-    q.choices.forEach((choice, idx) => {
-        if (idx !== correctIndex) {
-            wrongIndexes.push(idx);
-        }
-    });
-
-    /* Randomly choose 2 wrong answers from the 3 wrong answers */
-    wrongIndexes.sort(() => Math.random() - 0.5);
-
-    const fadeIndexes = wrongIndexes.slice(0, 2);
-
-    const buttons = document.querySelectorAll('.choice-btn');
-
-    fadeIndexes.forEach(idx => {
-        if (buttons[idx]) {
-            buttons[idx].classList.add('faded');
-        }
-    });
-
-    /* Mark lifeline as used for this question */
-    state.fiftyUsed = true;
-
-    document
-        .getElementById('fiftyFiftyBtn')
-        .classList.add('used');
-
-    Sound.click();
-}
-        
         // ============================================================
         //  RESULT
         // ============================================================
@@ -1524,11 +1357,7 @@ function useFiftyFifty() {
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
-        
-document
-    .getElementById('fiftyFiftyBtn')
-    .addEventListener('click', useFiftyFifty);
-        
+
         $('btnPlayAgain').addEventListener('click', () => {
             Sound.click();
             state.identity = null;
@@ -1538,32 +1367,28 @@ document
             state.gameOver = false;
             state.isAnswering = false;
             state.questions = [];
-            state.fiftyUsed = false;
-
-document
-    .getElementById('fiftyFiftyBtn')
-    .classList.remove('used');
             showTrees(false);
             buildTrees();
             showScreen('poster');
         });
 
-// ============================================================
-//  KEYBOARD SHORTCUTS
-// ============================================================
-document.addEventListener('keydown', (e) => {
-    if (e.key >= '1' && e.key <= '4') {
-        const idx = parseInt(e.key, 10) - 1;
-
-        const btn = document.querySelector(
-            `.choice-btn[data-index="${idx}"]:not(.disabled):not(.faded)`
-        );
-
-        if (btn) {
-            btn.click();
-        }
-    }
-});
+        // ============================================================
+        //  KEYBOARD SHORTCUTS
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const active = document.querySelector('.screen.active');
+                if (active) {
+                    const btn = active.querySelector('.btn:not(.disabled)');
+                    if (btn) btn.click();
+                }
+            }
+            if (e.key >= '1' && e.key <= '4') {
+                const idx = parseInt(e.key) - 1;
+                const btns = document.querySelectorAll('.choice-btn:not(.disabled)');
+                if (btns[idx]) btns[idx].click();
+            }
+        });
 
         // ============================================================
         //  INIT
