@@ -27,32 +27,25 @@
 }
 
         /* ----- SCREENS ----- */
-.screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-    transform: scale(0.96);
-    background: transparent;
-
-    /* Layer order for inactive screens */
-    z-index: 1;
-}
-
-.screen.active {
-    opacity: 1;
-    pointer-events: all;
-    transform: scale(1);
-
-    /* Active screen should be above inactive screens */
-    z-index: 2;
-}
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transform: scale(0.96);
+            background: transparent;
+        }
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: scale(1);
+        }
 
         /* ----- Background image for game screens ----- */
         #question-number,
@@ -620,15 +613,8 @@
         }
 
 /* ----- 50:50 LIFELINE ----- */
-
+        
 #fiftyFiftyBtn {
-  position: fixed;
-
-  /* Put it at the bottom middle, aligned with the centre 50:50 circle */
-  left: 50%;
-  bottom: 38px;
-  transform: translateX(-50%);
-
   width: 118px;
   height: 84px;
   border-radius: 50%;
@@ -641,7 +627,7 @@
   font-weight: 800;
   letter-spacing: -1px;
 
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
 
@@ -650,14 +636,10 @@
     inset 0 0 12px rgba(255, 255, 255, 0.05);
 
   transition: all 0.25s ease;
-
-  /* Important: keep it above the game screens */
-  z-index: 9999;
-  pointer-events: auto;
 }
 
 #fiftyFiftyBtn:hover {
-  transform: translateX(-50%) scale(1.08);
+  transform: scale(1.08);
   background: rgba(10, 22, 50, 0.78);
   box-shadow:
     0 0 18px rgba(215, 168, 63, 0.95),
@@ -665,22 +647,22 @@
 }
 
 #fiftyFiftyBtn.used {
-  pointer-events: none;
-  opacity: 0.45;
+    pointer-events: none;
+    opacity: 0.45;
 }
 
 /* The two removed wrong answers */
 .choice-btn.faded {
-  opacity: 0.4;
-  pointer-events: none;
-  cursor: default;
-  transition: opacity 0.3s ease;
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+    transition: opacity 0.3s ease;
 }
 
 .choice-btn.faded:hover {
-  transform: none;
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.45);
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
 }
         
         /* ----- RESPONSIVE ----- */
@@ -1226,21 +1208,16 @@ function showScreen(name) {
 
     const fiftyBtn = document.getElementById('fiftyFiftyBtn');
 
-    if (!fiftyBtn) return;
-
     if (name === 'choices') {
         fiftyBtn.style.display = 'flex';
-        fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
 
         if (state.fiftyUsed) {
             fiftyBtn.classList.add('used');
         } else {
             fiftyBtn.classList.remove('used');
         }
-
     } else {
         fiftyBtn.style.display = 'none';
-        fiftyBtn.style.pointerEvents = 'none';
     }
 }
 
