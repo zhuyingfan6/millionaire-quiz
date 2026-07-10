@@ -612,6 +612,37 @@
             filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
+/* ----- 50:50 LIFELINE ----- */
+
+#fiftyFiftyBtn {
+    position: absolute;
+
+    bottom: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+
+    cursor: pointer;
+    z-index: 100;
+}
+
+#fiftyFiftyBtn.used {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.choice-btn.faded {
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+``
+        
         /* ----- RESPONSIVE ----- */
         @media (max-width: 768px) {
             .screen {
@@ -734,6 +765,7 @@
 
     <!-- TREE DISPLAY (top-right, hidden until game starts) -->
     <div id="treeDisplay">
+        <button id="fiftyFiftyBtn" title="50:50 Lifeline"></button>
         <div class="tree-grid" id="treeGrid"></div>
         <div class="tree-label">Progress</div>
     </div>
@@ -1066,15 +1098,16 @@
         // ============================================================
         //  GAME STATE
         // ============================================================
-        const state = {
-            identity: null,
-            currentQuestion: 0,
-            correctCount: 0,
-            treesGreen: 0,
-            isAnswering: false,
-            gameOver: false,
-            questions: [],
-        };
+const state = {
+    identity: null,
+    currentQuestion: 0,
+    correctCount: 0,
+    treesGreen: 0,
+    isAnswering: false,
+    gameOver: false,
+    questions: [],
+    fiftyUsed: false
+};
 
         const LETTERS = ['A', 'B', 'C', 'D'];
         const TOTAL_QUESTIONS = 5;
@@ -1142,11 +1175,19 @@
         // ============================================================
         //  SCREEN MANAGEMENT
         // ============================================================
-        function showScreen(name) {
-    console.log('showScreen called with:', name);   // ← add this
+function showScreen(name) {
+
     Object.keys(screens).forEach((key) => {
         screens[key].classList.toggle('active', key === name);
     });
+
+    const fiftyBtn = document.getElementById('fiftyFiftyBtn');
+
+    if (name === 'choices' && !state.fiftyUsed) {
+        fiftyBtn.style.display = 'block';
+    } else {
+        fiftyBtn.style.display = 'none';
+    }
 }
 
         function setIdentityLabels() {
@@ -1193,11 +1234,16 @@
                     id === 'supplier' ? QUESTIONS_SUPPLIER :
                     QUESTIONS_BUSINESS_USER;
 
-                state.currentQuestion = 0;
-                state.correctCount = 0;
-                state.treesGreen = 0;
-                state.gameOver = false;
-                state.isAnswering = false;
+state.currentQuestion = 0;
+state.correctCount = 0;
+state.treesGreen = 0;
+state.gameOver = false;
+state.isAnswering = false;
+state.fiftyUsed = false;
+
+document
+    .getElementById('fiftyFiftyBtn')
+    .classList.remove('used');
 
                 buildTrees();
                 updateTrees(0);
@@ -1290,6 +1336,48 @@ btn.innerHTML =
             }, 700);
         }
 
+// ============================================================
+//  50:50 LIFELINE
+// ============================================================
+
+function useFiftyFifty() {
+
+    if (state.fiftyUsed) return;
+
+    const q = state.questions[state.currentQuestion];
+
+    if (!q) return;
+
+    const correctIndex = q.correct;
+
+    const wrongIndexes = [];
+
+    q.choices.forEach((c, idx) => {
+        if (idx !== correctIndex) {
+            wrongIndexes.push(idx);
+        }
+    });
+
+    // Randomly choose 2 wrong answers
+    wrongIndexes.sort(() => Math.random() - 0.5);
+
+    const removeIndexes = wrongIndexes.slice(0, 2);
+
+    const buttons = document.querySelectorAll('.choice-btn');
+
+    removeIndexes.forEach(idx => {
+        buttons[idx].classList.add('faded');
+    });
+
+    state.fiftyUsed = true;
+
+    document
+        .getElementById('fiftyFiftyBtn')
+        .classList.add('used');
+
+    Sound.click();
+}
+        
         // ============================================================
         //  RESULT
         // ============================================================
@@ -1367,7 +1455,11 @@ btn.innerHTML =
                 finalLabel.textContent = labelMap[state.identity] ? '— ' + labelMap[state.identity] + ' —' : '';
             }
         }
-
+        
+document
+    .getElementById('fiftyFiftyBtn')
+    .addEventListener('click', useFiftyFifty);
+        
         $('btnPlayAgain').addEventListener('click', () => {
             Sound.click();
             state.identity = null;
@@ -1377,6 +1469,11 @@ btn.innerHTML =
             state.gameOver = false;
             state.isAnswering = false;
             state.questions = [];
+            state.fiftyUsed = false;
+
+document
+    .getElementById('fiftyFiftyBtn')
+    .classList.remove('used');
             showTrees(false);
             buildTrees();
             showScreen('poster');
