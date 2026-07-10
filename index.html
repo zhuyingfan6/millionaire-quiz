@@ -665,8 +665,8 @@
 }
 
 #fiftyFiftyBtn.used {
-  opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  opacity: 0.45;
 }
 
 /* The two removed wrong answers */
@@ -1228,19 +1228,20 @@ function showScreen(name) {
 
     if (!fiftyBtn) return;
 
-if (name === 'choices') {
-    fiftyBtn.style.display = 'flex';
-    fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
+    if (name === 'choices') {
+        fiftyBtn.style.display = 'flex';
+        fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
 
-    if (state.fiftyUsed) {
-        fiftyBtn.classList.add('used');
+        if (state.fiftyUsed) {
+            fiftyBtn.classList.add('used');
+        } else {
+            fiftyBtn.classList.remove('used');
+        }
+
     } else {
-        fiftyBtn.classList.remove('used');
+        fiftyBtn.style.display = 'none';
+        fiftyBtn.style.pointerEvents = 'none';
     }
-
-} else {
-    fiftyBtn.style.display = 'none';
-    fiftyBtn.style.pointerEvents = 'none';
 }
 
         function setIdentityLabels() {
