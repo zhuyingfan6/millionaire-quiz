@@ -615,45 +615,35 @@
 /* ----- 50:50 LIFELINE ----- */
         
 #fiftyFiftyBtn {
-    position: fixed;
+  width: 118px;
+  height: 84px;
+  border-radius: 50%;
 
-    /* Adjust these two values if the button is slightly above/below the circle */
-    bottom: 45px;
-    left: 50%;
-    transform: translateX(-50%);
+  background: rgba(3, 10, 28, 0.62);
+  border: 3px solid #d7a83f;
 
-    width: 110px;
-    height: 80px;
+  color: #ffffff;
+  font-size: 31px;
+  font-weight: 800;
+  letter-spacing: -1px;
 
-    border-radius: 50%;
-    border: 3px solid #d6aa3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    background: rgba(5, 15, 35, 0.65);
-    color: #ffffff;
+  box-shadow:
+    0 0 10px rgba(215, 168, 63, 0.75),
+    inset 0 0 12px rgba(255, 255, 255, 0.05);
 
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    
-    box-shadow: 18    
-        0 0 12px rgba(214, 170, 60, 0.7),19    
-        inset 0 0 8px rgba(255, 255, 255, 0.08);
-
-    cursor: pointer;
-    z-index: 9999;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: opacity 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 #fiftyFiftyBtn:hover {
-    transform: translateX(-50%) scale(1.08);
-    box-shadow:
-        0 0 28px rgba(255, 215, 0, 1),
-        inset 0 0 18px rgba(255, 215, 0, 0.45);
+  transform: scale(1.08);
+  background: rgba(10, 22, 50, 0.78);
+  box-shadow:
+    0 0 18px rgba(215, 168, 63, 0.95),
+    inset 0 0 12px rgba(255, 255, 255, 0.08);
 }
 
 #fiftyFiftyBtn.used {
