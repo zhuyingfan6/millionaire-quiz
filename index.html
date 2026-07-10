@@ -1537,22 +1537,22 @@ document
             showScreen('poster');
         });
 
-        // ============================================================
-        //  KEYBOARD SHORTCUTS
-        // ============================================================
-        document.addEventListener('keydown', (e) => {
-if (e.key >= '1' && e.key <= '4') {
-    const idx = parseInt(e.key) - 1;
-    const btn = document.querySelector(`.choice-btn[data-index="${idx}"]:not(.disabled):not(.faded)`);
-    if (btn) btn.click();
-}
-            }
-            if (e.key >= '1' && e.key <= '4') {
-                const idx = parseInt(e.key) - 1;
-                const btns = document.querySelectorAll('.choice-btn:not(.disabled)');
-                if (btns[idx]) btns[idx].click();
-            }
-        });
+// ============================================================
+//  KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', (e) => {
+    if (e.key >= '1' && e.key <= '4') {
+        const idx = parseInt(e.key, 10) - 1;
+
+        const btn = document.querySelector(
+            `.choice-btn[data-index="${idx}"]:not(.disabled):not(.faded)`
+        );
+
+        if (btn) {
+            btn.click();
+        }
+    }
+});
 
         // ============================================================
         //  INIT
