@@ -615,7 +615,7 @@
 /* ----- 50:50 LIFELINE ----- */
 
 #fiftyFiftyBtn {
-    position: absolute;
+    position: fixed;
 
     bottom: 45px;
     left: 50%;
@@ -629,7 +629,7 @@
     border: none;
 
     cursor: pointer;
-    z-index: 100;
+    z-index: 9999;
 }
 
 #fiftyFiftyBtn.used {
@@ -641,7 +641,6 @@
     opacity: 0.4;
     transition: opacity 0.3s ease;
 }
-``
         
         /* ----- RESPONSIVE ----- */
         @media (max-width: 768px) {
@@ -764,11 +763,13 @@
 <body>
 
     <!-- TREE DISPLAY (top-right, hidden until game starts) -->
-    <div id="treeDisplay">
-        <button id="fiftyFiftyBtn" title="50:50 Lifeline"></button>
-        <div class="tree-grid" id="treeGrid"></div>
-        <div class="tree-label">Progress</div>
-    </div>
+<div id="treeDisplay">
+    <div class="tree-grid" id="treeGrid"></div>
+    <div class="tree-label">Progress</div>
+</div>
+
+<button id="fiftyFiftyBtn" title="50:50 Lifeline"></button>
+
 
     <!-- ===== POSTER ===== -->
     <div class="screen full-image-screen active" id="poster">
@@ -1369,7 +1370,7 @@ function useFiftyFifty() {
         buttons[idx].classList.add('faded');
     });
 
-    state.fiftyUsed = true;
+    state.fiftyUsed = false;
 
     document
         .getElementById('fiftyFiftyBtn')
