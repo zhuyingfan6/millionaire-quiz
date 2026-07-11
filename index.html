@@ -917,89 +917,71 @@
     </div>
 
     <script>
-        // ============================================================
-        //  SOUND ENGINE (Web Audio)
-        // ============================================================
-        const Sound = (() => {
-            let ctx = null;
+// ============================================================
+//  BACKGROUND MUSIC MANAGER
+// ============================================================
+const Music = (() => {
+    const audio = new Audio();
+    let currentSrc = null;
+    let isPlaying = false;
 
-            function getCtx() {
-                if (!ctx) {
-                    try {
-                        ctx = new(window.AudioContext || window.webkitAudioContext)();
-                    } catch (_) { return null; }
-                }
-                return ctx;
-            }
+    function play(src, loop = true) {
+        if (!src) return;
+        try {
+            if (currentSrc === src && isPlaying) return;
+            audio.pause();
+            audio.src = src;
+            audio.loop = loop;
+            audio.currentTime = 0;
+            audio.play()
+                .then(() => {
+                    currentSrc = src;
+                    isPlaying = true;
+                })
+                .catch(() => {
+                    currentSrc = src;
+                    isPlaying = false;
+                });
+        } catch (_) {}
+    }
 
-            function playTone(freq, duration, type = 'sine', volume = 0.3) {
-                const c = getCtx();
-                if (!c) return;
-                try {
-                    const osc = c.createOscillator();
-                    const gain = c.createGain();
-                    osc.type = type;
-                    osc.frequency.value = freq;
-                    gain.gain.setValueAtTime(volume, c.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
-                    osc.connect(gain);
-                    gain.connect(c.destination);
-                    osc.start(c.currentTime);
-                    osc.stop(c.currentTime + duration);
-                } catch (_) {}
-            }
+    function stop() {
+        try {
+            audio.pause();
+            audio.currentTime = 0;
+            isPlaying = false;
+            currentSrc = null;
+        } catch (_) {}
+    }
 
-            function playChord(notes, durations, type = 'sine', volume = 0.25) {
-                const c = getCtx();
-                if (!c) return;
-                try {
-                    notes.forEach((freq, i) => {
-                        const osc = c.createOscillator();
-                        const gain = c.createGain();
-                        osc.type = type;
-                        osc.frequency.value = freq;
-                        const dur = durations[i] || 0.15;
-                        gain.gain.setValueAtTime(volume * 0.7, c.currentTime + i * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + i * 0.08 + dur);
-                        osc.connect(gain);
-                        gain.connect(c.destination);
-                        osc.start(c.currentTime + i * 0.08);
-                        osc.stop(c.currentTime + i * 0.08 + dur);
-                    });
-                } catch (_) {}
-            }
+    function resume() {
+        if (currentSrc && !isPlaying) {
+            audio.play().then(() => { isPlaying = true; }).catch(() => {});
+        }
+    }
 
-            return {
-                click() { playTone(880, 0.08, 'sine', 0.2); },
-                startGame() {
-                    playChord([523, 659, 784, 1047], [0.15, 0.15, 0.15, 0.3], 'sine', 0.25);
-                },
-                correct() {
-                    playChord([523, 659, 784, 1047], [0.12, 0.12, 0.12, 0.25], 'sine', 0.3);
-                    setTimeout(() => {
-                        playChord([1047, 1319, 1568], [0.15, 0.15, 0.25], 'sine', 0.2);
-                    }, 300);
-                },
-                wrong() {
-                    playChord([523, 440, 349, 262], [0.2, 0.2, 0.2, 0.35], 'sine', 0.25);
-                },
-                final() {
-                    const notes = [523, 659, 784, 1047, 1319, 1568, 2093];
-                    notes.forEach((f, i) => {
-                        setTimeout(() => {
-                            playTone(f, 0.2, 'sine', 0.2);
-                        }, i * 80);
-                    });
-                    setTimeout(() => {
-                        playChord([1568, 2093, 2637], [0.2, 0.2, 0.35], 'sine', 0.25);
-                    }, notes.length * 80 + 100);
-                },
-                transition() { playTone(660, 0.1, 'sine', 0.15); },
-                selectIdentity() { playTone(523, 0.12, 'sine', 0.2);
-                    setTimeout(() => playTone(784, 0.12, 'sine', 0.2), 120); },
-            };
-        })();
+    function unlock() {
+        if (currentSrc && !isPlaying) {
+            audio.play().then(() => { isPlaying = true; }).catch(() => {});
+        }
+    }
 
+    return { play, stop, resume, unlock };
+})();
+
+// ============================================================
+//  SCREEN → MUSIC MAP
+// ============================================================
+const MUSIC_MAP = {
+    'poster': 'start.mp3',
+    'user-guide': 'start.mp3',
+    'landing': 'start.mp3',
+    'identity-select': 'start.mp3',
+    'question-number': 'questionnumber.mp3',
+    'choices': 'choice.mp3',
+    'final': 'result.mp3',
+};
+        
         // ============================================================
         //  GAME DATA
         // ============================================================
@@ -1219,30 +1201,36 @@ const state = {
         // ============================================================
         //  SCREEN MANAGEMENT
         // ============================================================
-function showScreen(name) {
-
+function showScreen(name, extra = null) {
     Object.keys(screens).forEach((key) => {
         screens[key].classList.toggle('active', key === name);
     });
 
+    // ---- Play music for this screen ----
+    if (name === 'result') {
+        // Result screen: use extra (isCorrect) to pick correctanswer.mp3 or wronganswer.mp3
+        const isCorrect = (extra === true);
+        const src = isCorrect ? 'correctanswer.mp3' : 'wronganswer.mp3';
+        Music.play(src, false); // play once, no loop
+    } else if (MUSIC_MAP[name]) {
+        Music.play(MUSIC_MAP[name], true);
+    } else {
+        Music.stop();
+    }
+
+    // ---- 50:50 button visibility ----
     const fiftyBtn = document.getElementById('fiftyFiftyBtn');
-
-    if (!fiftyBtn) return;
-
     if (name === 'choices') {
         fiftyBtn.style.display = 'flex';
         fiftyBtn.style.pointerEvents = state.fiftyUsed ? 'none' : 'auto';
-
-        if (state.fiftyUsed) {
-            fiftyBtn.classList.add('used');
-        } else {
-            fiftyBtn.classList.remove('used');
-        }
-
+        fiftyBtn.classList.toggle('used', state.fiftyUsed);
     } else {
         fiftyBtn.style.display = 'none';
         fiftyBtn.style.pointerEvents = 'none';
     }
+
+    // Unlock audio on any screen change (user gesture already happened)
+    Music.unlock();
 }
 
         function setIdentityLabels() {
@@ -1257,24 +1245,18 @@ function showScreen(name) {
         //  POSTER & USER GUIDE NAVIGATION
         // ============================================================
         $('btnPosterNext').addEventListener('click', () => {
-            Sound.click();
             showScreen('userGuide');
-            Sound.transition();
         });
 
         $('btnGuideNext').addEventListener('click', () => {
-            Sound.click();
             showScreen('landing');
-            Sound.startGame();
         });
 
         // ============================================================
         //  LANDING
         // ============================================================
         $('btnStart').addEventListener('click', () => {
-            Sound.click();
             showScreen('identity');
-            Sound.startGame();
         });
 
         // ============================================================
@@ -1316,7 +1298,6 @@ document
         function showQuestionNumber() {
             $('qnNumber').textContent = state.currentQuestion + 1;
             setIdentityLabels();
-            Sound.transition();
         }
 
         $('btnShowChoices').addEventListener('click', () => {
@@ -1362,7 +1343,6 @@ btn.innerHTML =
             });
 
             showScreen('choices');
-            Sound.transition();
         }
 
 function handleChoice(selected) {
@@ -1391,9 +1371,6 @@ function handleChoice(selected) {
                 state.correctCount++;
                 state.treesGreen++;
                 updateTrees(state.treesGreen);
-                Sound.correct();
-            } else {
-                Sound.wrong();
             }
 
             setTimeout(() => {
@@ -1466,13 +1443,11 @@ function useFiftyFifty() {
                 nextBtn.textContent = 'Next Question →';
             }
 
-            showScreen('result');
-            Sound.transition();
+            showScreen('result', isCorrect);
         }
 
         $('btnNextQuestion').addEventListener('click', () => {
             if (state.gameOver) return;
-            Sound.click();
             state.currentQuestion++;
             if (state.currentQuestion >= state.questions.length) {
                 showFinal();
@@ -1517,7 +1492,6 @@ function useFiftyFifty() {
             $('finalCongrats').textContent = msg;
 
             showScreen('final');
-            Sound.final();
 
             const finalLabel = document.querySelector('#final .identity-label');
             if (finalLabel) {
@@ -1531,7 +1505,6 @@ document
     .addEventListener('click', useFiftyFifty);
         
         $('btnPlayAgain').addEventListener('click', () => {
-            Sound.click();
             state.identity = null;
             state.currentQuestion = 0;
             state.correctCount = 0;
