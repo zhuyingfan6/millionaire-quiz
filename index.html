@@ -926,40 +926,29 @@ const Music = (() => {
     let isPlaying = false;
 
     function play(src, loop = true) {
-        if (!src) return;
-        try {
-            if (currentSrc === src && isPlaying) return;
-            audio.pause();
-            audio.src = src;
-            audio.loop = loop;
-            audio.currentTime = 0;
-            audio.play()
-                .then(() => {
-                    currentSrc = src;
-                    isPlaying = true;
-                })
-                .catch(() => {
-                    currentSrc = src;
-                    isPlaying = false;
-                });
-        } catch (_) {}
+        if (!src) return Promise.resolve(); // no-op
+        // If already playing the same track, resolve immediately
+        if (currentSrc === src && isPlaying) {
+            return Promise.resolve();
+        }
+        // Stop and reset
+        audio.pause();
+        audio.src = src;
+        audio.loop = loop;
+        audio.currentTime = 0;
+        // Return the play() promise so we can chain .then/.catch
+        return audio.play()
+            .then(() => {
+                currentSrc = src;
+                isPlaying = true;
+            })
+            .catch((err) => {
+                currentSrc = src;
+                isPlaying = false;
+                // Re-throw so callers can catch it
+                throw err;
+            });
     }
-
-    function playIfNotPlaying(src, loop = true) {
-    if (currentSrc === src && isPlaying) {
-        // Already playing the same track – do nothing
-        return;
-    }
-    if (currentSrc === src && !isPlaying) {
-        // Same track but paused – resume playback
-        audio.play()
-            .then(() => { isPlaying = true; })
-            .catch(() => {});
-        return;
-    }
-    // Different track or first time – play normally
-    play(src, loop);
-}
 
     function stop() {
         try {
@@ -972,17 +961,21 @@ const Music = (() => {
 
     function resume() {
         if (currentSrc && !isPlaying) {
-            audio.play().then(() => { isPlaying = true; }).catch(() => {});
+            audio.play()
+                .then(() => { isPlaying = true; })
+                .catch(() => {});
         }
     }
 
     function unlock() {
         if (currentSrc && !isPlaying) {
-            audio.play().then(() => { isPlaying = true; }).catch(() => {});
+            audio.play()
+                .then(() => { isPlaying = true; })
+                .catch(() => {});
         }
     }
 
-    return { play, playIfNotPlaying, stop, resume, unlock };
+    return { play, stop, resume, unlock };
 })();
 
 // ============================================================
@@ -1578,21 +1571,32 @@ document.addEventListener('keydown', (e) => {
         //  INIT
         // ============================================================
 showScreen('poster');
+buildTrees();
+showTrees(false);
+
+// Try to autoplay start.mp3 on load
 Music.play('start.mp3', true)
     .then(() => {
-        console.log('✅ Autoplay allowed!');
+        console.log('✅ Autoplay successful');
     })
     .catch(() => {
-        console.log('⛔ Autoplay blocked – waiting for first click.');
-        const startOnFirstClick = () => {
-            Music.play('start.mp3', true);
-            document.removeEventListener('click', startOnFirstClick);
-        };
-        document.addEventListener('click', startOnFirstClick);
+        console.log('⛔ Autoplay blocked – waiting for first click on poster.');
+        // Start music on the first click anywhere inside the poster (image or button)
+        const posterWrap = document.querySelector('#poster .image-wrap');
+        if (posterWrap) {
+            const startOnClick = () => {
+                Music.play('start.mp3', true)
+                    .then(() => {
+                        posterWrap.removeEventListener('click', startOnClick);
+                        console.log('✅ Music started after user click');
+                    })
+                    .catch(e => console.warn('Still blocked?', e));
+            };
+            posterWrap.addEventListener('click', startOnClick);
+        }
     });
-        buildTrees();
-        showTrees(false);
-        console.log('🌱 Sustainable Millionaire loaded!');
+
+console.log('🌱 Sustainable Millionaire loaded!');
     </script>
 
 </body>
