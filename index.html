@@ -924,7 +924,14 @@ const Music = (() => {
     const audio = new Audio();
     let currentSrc = null;
     let isPlaying = false;
-
+    const trackVolumes = {
+        'start.mp3': 0.6,            // landing, poster, user-guide
+        'questionnumber.mp3': 0.5,   // question number screen
+        'choice.mp3': 0.5,           // choices screen
+        'result.mp3': 1.0,           // final screen
+        'correctanswer.mp3': 1.0,    // correct sound effect
+        'wronganswer.mp3': 1.0       // wrong sound effect
+    };
     function play(src, loop = true) {
         if (!src) return Promise.resolve(); // no-op
         // If already playing the same track, resolve immediately
@@ -982,10 +989,6 @@ const Music = (() => {
 //  SCREEN → MUSIC MAP
 // ============================================================
 const MUSIC_MAP = {
-    'poster': 'start.mp3',
-    'userGuide': 'start.mp3',
-    'landing': 'start.mp3',
-    'identity': 'start.mp3',
     'question-number': 'questionnumber.mp3',
     'choices': 'choice.mp3',
     'final': 'result.mp3',
