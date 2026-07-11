@@ -1231,23 +1231,26 @@ function showScreen(name, extra = null) {
         screens[key].classList.toggle('active', key === name);
     });
 
-    // ---- Play music for this screen ----
+    // ---- Music handling ----
     if (name === 'result') {
-        // Result screen: play correct/wrong sound (once, interrupts background)
+        // Play correct/wrong sound (once, interrupts background)
         const isCorrect = (extra === true);
         const src = isCorrect ? 'correctanswer.mp3' : 'wronganswer.mp3';
         Music.play(src, false);
     } 
-    else if (name !== 'poster' && MUSIC_MAP[name]) {
-        // For all screens except poster, play background music if defined,
-        // but don't restart if the same track is already playing.
-        Music.playIfNotPlaying(MUSIC_MAP[name], true);
-    } 
-    else {
-        // If this screen has no music mapping (like poster), stop background music.
-        // (The music will be started again when the user clicks "Next" on poster.)
+    else if (name === 'question-number' || name === 'choices' || name === 'final') {
+        // These screens have their own background music
+        const src = MUSIC_MAP[name];
+        if (src) {
+            Music.play(src, true);
+        }
+    }
+    else if (name === 'poster') {
+        // Stop music when returning to poster (e.g., after Play Again)
         Music.stop();
     }
+    // For 'user-guide', 'landing', 'identity-select':
+    // Do nothing – keep the currently playing music (started on poster click)
 
     // ---- 50:50 lifeline button visibility ----
     const fiftyBtn = document.getElementById('fiftyFiftyBtn');
