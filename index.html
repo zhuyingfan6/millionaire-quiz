@@ -1567,39 +1567,7 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
-
-        // ============================================================
-        //  INIT
-        // ============================================================
-showScreen('poster');
-buildTrees();
-showTrees(false);
-setupPosterMusic();
-// Try to autoplay start.mp3 on load
-Music.play('start.mp3', true)
-    .then(() => {
-        console.log('✅ Autoplay successful');
-    })
-    .catch(() => {
-        console.log('⛔ Autoplay blocked – waiting for first click on poster.');
-        // Start music on the first click anywhere inside the poster (image or button)
-        const posterWrap = document.querySelector('#poster .image-wrap');
-        if (posterWrap) {
-            const startOnClick = () => {
-                Music.play('start.mp3', true)
-                    .then(() => {
-                        posterWrap.removeEventListener('click', startOnClick);
-                        console.log('✅ Music started after user click');
-                    })
-                    .catch(e => console.warn('Still blocked?', e));
-            };
-            posterWrap.addEventListener('click', startOnClick);
-        }
-    });
- buildTrees();
-        showTrees(false);
-        console.log('🌱 Sustainable Millionaire loaded!');
-        let posterClickHandler = null;
+let posterClickHandler = null;
 
 function setupPosterMusic() {
     const posterWrap = document.querySelector('#poster .image-wrap');
@@ -1631,6 +1599,38 @@ function setupPosterMusic() {
             posterWrap.addEventListener('click', posterClickHandler);
         });
 }
+        // ============================================================
+        //  INIT
+        // ============================================================
+showScreen('poster');
+buildTrees();
+showTrees(false);
+setupPosterMusic();
+// Try to autoplay start.mp3 on load
+Music.play('start.mp3', true)
+    .then(() => {
+        console.log('✅ Autoplay successful');
+    })
+    .catch(() => {
+        console.log('⛔ Autoplay blocked – waiting for first click on poster.');
+        // Start music on the first click anywhere inside the poster (image or button)
+        const posterWrap = document.querySelector('#poster .image-wrap');
+        if (posterWrap) {
+            const startOnClick = () => {
+                Music.play('start.mp3', true)
+                    .then(() => {
+                        posterWrap.removeEventListener('click', startOnClick);
+                        console.log('✅ Music started after user click');
+                    })
+                    .catch(e => console.warn('Still blocked?', e));
+            };
+            posterWrap.addEventListener('click', startOnClick);
+        }
+    });
+ buildTrees();
+        showTrees(false);
+        console.log('🌱 Sustainable Millionaire loaded!');
+        
     </script>
 
 </body>
