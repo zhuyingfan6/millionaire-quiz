@@ -945,6 +945,22 @@ const Music = (() => {
         } catch (_) {}
     }
 
+    function playIfNotPlaying(src, loop = true) {
+        if (currentSrc === src && isPlaying) {
+            // Already playing the same track – do nothing
+            return;
+        }
+        if (currentSrc === src && !isPlaying) {
+            // Same track but paused – resume
+            audio.play()
+                .then(() => { isPlaying = true; })
+                .catch(() => {});
+            return;
+        }
+        // Different track or first time – play normally
+        play(src, loop);
+    }
+
     function stop() {
         try {
             audio.pause();
@@ -966,7 +982,7 @@ const Music = (() => {
         }
     }
 
-    return { play, stop, resume, unlock };
+    return { play, playIfNotPlaying, stop, resume, unlock };
 })();
 
 // ============================================================
@@ -1210,23 +1226,30 @@ const state = {
         //  SCREEN MANAGEMENT
         // ============================================================
 function showScreen(name, extra = null) {
+    // ---- Switch active screen ----
     Object.keys(screens).forEach((key) => {
         screens[key].classList.toggle('active', key === name);
     });
 
     // ---- Play music for this screen ----
     if (name === 'result') {
-        // Result screen: use extra (isCorrect) to pick correctanswer.mp3 or wronganswer.mp3
+        // Result screen: play correct/wrong sound (once, interrupts background)
         const isCorrect = (extra === true);
         const src = isCorrect ? 'correctanswer.mp3' : 'wronganswer.mp3';
-        Music.play(src, false); // play once, no loop
-    } else if (MUSIC_MAP[name]) {
-        Music.play(MUSIC_MAP[name], true);
-    } else {
+        Music.play(src, false);
+    } 
+    else if (name !== 'poster' && MUSIC_MAP[name]) {
+        // For all screens except poster, play background music if defined,
+        // but don't restart if the same track is already playing.
+        Music.playIfNotPlaying(MUSIC_MAP[name], true);
+    } 
+    else {
+        // If this screen has no music mapping (like poster), stop background music.
+        // (The music will be started again when the user clicks "Next" on poster.)
         Music.stop();
     }
 
-    // ---- 50:50 button visibility ----
+    // ---- 50:50 lifeline button visibility ----
     const fiftyBtn = document.getElementById('fiftyFiftyBtn');
     if (name === 'choices') {
         fiftyBtn.style.display = 'flex';
@@ -1237,7 +1260,7 @@ function showScreen(name, extra = null) {
         fiftyBtn.style.pointerEvents = 'none';
     }
 
-    // Unlock audio on any screen change (user gesture already happened)
+    // Unlock audio context (in case it was blocked)
     Music.unlock();
 }
 
@@ -1253,8 +1276,9 @@ function showScreen(name, extra = null) {
         //  POSTER & USER GUIDE NAVIGATION
         // ============================================================
         $('btnPosterNext').addEventListener('click', () => {
-            showScreen('userGuide');
-        });
+    Music.play('start.mp3', true);   // start music on user gesture
+    showScreen('userGuide');
+});
 
         $('btnGuideNext').addEventListener('click', () => {
             showScreen('landing');
