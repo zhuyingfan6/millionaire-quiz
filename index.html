@@ -1577,7 +1577,19 @@ document.addEventListener('keydown', (e) => {
         // ============================================================
         //  INIT
         // ============================================================
-        showScreen('poster');
+showScreen('poster');
+Music.play('start.mp3', true)
+    .then(() => {
+        console.log('✅ Autoplay allowed!');
+    })
+    .catch(() => {
+        console.log('⛔ Autoplay blocked – waiting for first click.');
+        const startOnFirstClick = () => {
+            Music.play('start.mp3', true);
+            document.removeEventListener('click', startOnFirstClick);
+        };
+        document.addEventListener('click', startOnFirstClick);
+    });
         buildTrees();
         showTrees(false);
         console.log('🌱 Sustainable Millionaire loaded!');
