@@ -982,57 +982,21 @@ const Music = (() => {
 //  SCREEN → MUSIC MAP
 // ============================================================
 const MUSIC_MAP = {
+    'poster': 'start.mp3',
+    'userGuide': 'start.mp3',
+    'landing': 'start.mp3',
+    'identity': 'start.mp3',
     'question-number': 'questionnumber.mp3',
     'choices': 'choice.mp3',
     'final': 'result.mp3',
 };
 
 const Sound = {
-    _ctx: null,
-
-    _getContext() {
-        if (!this._ctx) {
-            try {
-                this._ctx = new (window.AudioContext || window.webkitAudioContext)();
-            } catch (_) {
-                return null;
-            }
-        }
-        return this._ctx;
-    },
-
-    _playTone(frequency, duration, type = 'sine', volume = 0.15) {
-    const ctx = this._getContext();
-    if (!ctx) return;
-    try {
-        // ✅ Resume context if suspended (first user interaction)
-        if (ctx.state === 'suspended') {
-            ctx.resume();
-        }
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = type;
-        osc.frequency.value = frequency;
-        gain.gain.setValueAtTime(volume, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + duration);
-    } catch (_) {}
-}
-
     click() {
-        // Short, sharp click – two quick tones
-        this._playTone(800, 0.04, 'square', 0.10);
-        setTimeout(() => this._playTone(600, 0.04, 'square', 0.08), 50);
+        // Placeholder for click sound
     },
-
     selectIdentity() {
-        // Ascending tone – positive selection
-        this._playTone(500, 0.1, 'sine', 0.12);
-        setTimeout(() => this._playTone(700, 0.1, 'sine', 0.12), 100);
-        setTimeout(() => this._playTone(900, 0.15, 'sine', 0.14), 200);
+        // Placeholder for identity select sound
     }
 };
         // ============================================================
@@ -1604,6 +1568,39 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+        // ============================================================
+        //  INIT
+        // ============================================================
+showScreen('poster');
+buildTrees();
+showTrees(false);
+setupPosterMusic();
+// Try to autoplay start.mp3 on load
+Music.play('start.mp3', true)
+    .then(() => {
+        console.log('✅ Autoplay successful');
+    })
+    .catch(() => {
+        console.log('⛔ Autoplay blocked – waiting for first click on poster.');
+        // Start music on the first click anywhere inside the poster (image or button)
+        const posterWrap = document.querySelector('#poster .image-wrap');
+        if (posterWrap) {
+            const startOnClick = () => {
+                Music.play('start.mp3', true)
+                    .then(() => {
+                        posterWrap.removeEventListener('click', startOnClick);
+                        console.log('✅ Music started after user click');
+                    })
+                    .catch(e => console.warn('Still blocked?', e));
+            };
+            posterWrap.addEventListener('click', startOnClick);
+        }
+    });
+ buildTrees();
+        showTrees(false);
+        console.log('🌱 Sustainable Millionaire loaded!');
+        let posterClickHandler = null;
+
 function setupPosterMusic() {
     const posterWrap = document.querySelector('#poster .image-wrap');
     if (!posterWrap) return;
@@ -1634,14 +1631,6 @@ function setupPosterMusic() {
             posterWrap.addEventListener('click', posterClickHandler);
         });
 }
-        // ============================================================
-        //  INIT
-        // ============================================================
-showScreen('poster');
-buildTrees();
-showTrees(false);
-setupPosterMusic();   // tries autoplay, falls back to click
-console.log('🌱 Sustainable Millionaire loaded!');
     </script>
 
 </body>
