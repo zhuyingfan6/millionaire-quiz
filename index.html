@@ -946,20 +946,20 @@ const Music = (() => {
     }
 
     function playIfNotPlaying(src, loop = true) {
-        if (currentSrc === src && isPlaying) {
-            // Already playing the same track – do nothing
-            return;
-        }
-        if (currentSrc === src && !isPlaying) {
-            // Same track but paused – resume
-            audio.play()
-                .then(() => { isPlaying = true; })
-                .catch(() => {});
-            return;
-        }
-        // Different track or first time – play normally
-        play(src, loop);
+    if (currentSrc === src && isPlaying) {
+        // Already playing the same track – do nothing
+        return;
     }
+    if (currentSrc === src && !isPlaying) {
+        // Same track but paused – resume playback
+        audio.play()
+            .then(() => { isPlaying = true; })
+            .catch(() => {});
+        return;
+    }
+    // Different track or first time – play normally
+    play(src, loop);
+}
 
     function stop() {
         try {
@@ -1276,7 +1276,7 @@ function showScreen(name, extra = null) {
         //  POSTER & USER GUIDE NAVIGATION
         // ============================================================
         $('btnPosterNext').addEventListener('click', () => {
-    Music.play('start.mp3', true);   // start music on user gesture
+    Music.play('start.mp3', true);
     showScreen('userGuide');
 });
 
