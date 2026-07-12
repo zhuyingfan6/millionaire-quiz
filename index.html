@@ -1006,7 +1006,7 @@ const Sound = (() => {
                 return ctx;
             }
 
-            function playTone(freq, duration, type = 'sine', volume = 0.3) {
+            function playTone(freq, duration, type = 'sine', volume = 0.6) {
                 const c = getCtx();
                 if (!c) return;
                 try {
@@ -1023,7 +1023,7 @@ const Sound = (() => {
                 } catch (_) {}
             }
 
-            function playChord(notes, durations, type = 'sine', volume = 0.25) {
+            function playChord(notes, durations, type = 'sine', volume = 0.6) {
                 const c = getCtx();
                 if (!c) return;
                 try {
@@ -1044,7 +1044,7 @@ const Sound = (() => {
             }
 
             return {
-                click() { playTone(880, 0.08, 'sine', 0.2); },
+                click() { playTone(880, 0.08, 'sine', 0.5); },
                 startGame() {
                     playChord([523, 659, 784, 1047], [0.15, 0.15, 0.15, 0.3], 'sine', 0.25);
                 },
