@@ -1346,11 +1346,13 @@ function showScreen(name, extra = null) {
         //  POSTER & USER GUIDE NAVIGATION
         // ============================================================
         $('btnPosterNext').addEventListener('click', () => {
-    Music.play('start.mp3', true);
-    showScreen('userGuide');
-});
+            Sound.click();
+            Music.play('start.mp3', true);
+            showScreen('userGuide');
+        });
 
         $('btnGuideNext').addEventListener('click', () => {
+            Sound.click();
             showScreen('landing');
         });
 
@@ -1358,6 +1360,7 @@ function showScreen(name, extra = null) {
         //  LANDING
         // ============================================================
         $('btnStart').addEventListener('click', () => {
+            Sound.click();
             showScreen('identity');
         });
 
@@ -1549,6 +1552,7 @@ function useFiftyFifty() {
         }
 
         $('btnNextQuestion').addEventListener('click', () => {
+            Sound.click();
             if (state.gameOver) return;
             state.currentQuestion++;
             if (state.currentQuestion >= state.questions.length) {
@@ -1607,6 +1611,7 @@ document
     .addEventListener('click', useFiftyFifty);
         
         $('btnPlayAgain').addEventListener('click', () => {
+            Sound.click();
             state.identity = null;
             state.currentQuestion = 0;
             state.correctCount = 0;
