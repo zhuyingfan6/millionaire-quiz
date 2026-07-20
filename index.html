@@ -55,15 +55,16 @@
 }
 
         /* ----- Background image for game screens ----- */
-        #question-number,
-        #choices,
-        #result,
-        #final {
-            background-image: url('background.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+#question-number,
+#choices,
+#result,
+#final,
+#end {
+    background-image: url('background.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
 
 /* ----- Poster & User Guide ----- */
 .full-image-screen {
@@ -621,6 +622,51 @@
             filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
+/* ----- END PAGE ----- */
+#end .end-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 760px;
+}
+
+#end .end-icon {
+    font-size: clamp(4rem, 9vw, 7rem);
+    margin-bottom: 0.6rem;
+    animation: resultPop 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#end .end-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #ffd700;
+    text-shadow:
+        0 0 30px rgba(255, 215, 0, 0.6),
+        0 0 70px rgba(255, 215, 0, 0.25);
+    margin-bottom: 0.8rem;
+}
+
+#end .end-message {
+    max-width: 620px;
+    margin-bottom: 2rem;
+    padding: 1.3rem 2rem;
+
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    line-height: 1.7;
+    color: #d0c8b8;
+
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 215, 0, 0.18);
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+}
+
+#end .btn {
+    margin-top: 0.5rem;
+}
+        
 /* ----- 50:50 LIFELINE ----- */
 
 #fiftyFiftyBtn {
@@ -913,10 +959,35 @@
             <div class="final-trees" id="finalTreeDisplay"></div>
             <div class="final-identity">Identity: <span id="finalIdentity">—</span></div>
             <div class="final-congrats" id="finalCongrats">You've shown exceptional knowledge in the supply chain world!</div>
-            <button class="btn" id="btnPlayAgain">🔄 &nbsp;Play Again</button>
+           <button class="btn" id="btnFinalNext">Next &nbsp;→</button>
         </div>
     </div>
 
+<!-- ===== END PAGE ===== -->
+<div class="screen" id="end">
+    <div class="end-content">
+        <div class="end-icon">🌍</div>
+
+        <div class="end-title">
+            Thank You!
+        </div>
+
+        <div class="end-message">
+            Thank you for taking part in the Green Millionaire Challenge!
+            <br><br>
+            Every sustainable decision helps us grow a greener and more
+            responsible supply chain.
+            <br><br>
+            多謝你參與綠色百萬富翁挑戰！每一個可持續發展的決定，
+            都有助我們建立更環保及更負責任的供應鏈。
+        </div>
+
+        <button class="btn" id="btnPlayAgain">
+            🔄 &nbsp;Play Again
+        </button>
+    </div>
+</div>
+    
     <script>
 // ============================================================
 //  BACKGROUND MUSIC MANAGER
@@ -1238,16 +1309,17 @@ const state = {
         //  DOM REFS
         // ============================================================
         const $ = (id) => document.getElementById(id);
-        const screens = {
-            poster: $('poster'),
-            userGuide: $('user-guide'),
-            landing: $('landing'),
-            identity: $('identity-select'),
-            questionNumber: $('question-number'),
-            choices: $('choices'),
-            result: $('result'),
-            final: $('final'),
-        };
+const screens = {
+    poster: $('poster'),
+    userGuide: $('user-guide'),
+    landing: $('landing'),
+    identity: $('identity-select'),
+    questionNumber: $('question-number'),
+    choices: $('choices'),
+    result: $('result'),
+    final: $('final'),
+    end: $('end')
+};
         const treeGrid = $('treeGrid');
 
         // ============================================================
@@ -1610,27 +1682,40 @@ function useFiftyFifty() {
 document
     .getElementById('fiftyFiftyBtn')
     .addEventListener('click', useFiftyFifty);
+
+// ============================================================
+//  FINAL RESULTS → END PAGE
+// ============================================================
+$('btnFinalNext').addEventListener('click', () => {
+    Sound.click();
+    showScreen('end');
+});
+
+// ============================================================
+//  PLAY AGAIN
+// ============================================================
+$('btnPlayAgain').addEventListener('click', () => {
+    Sound.click();
+
+    state.identity = null;
+    state.currentQuestion = 0;
+    state.correctCount = 0;
+    state.treesGreen = 0;
+    state.gameOver = false;
+    state.isAnswering = false;
+    state.questions = [];
+    state.fiftyUsed = false;
+
+    document
+        .getElementById('fiftyFiftyBtn')
+        .classList.remove('used');
+
+    showTrees(false);
+    buildTrees();
+    showScreen('poster');
+    setupPosterMusic();
+});
         
-        $('btnPlayAgain').addEventListener('click', () => {
-            Sound.click();
-            state.identity = null;
-            state.currentQuestion = 0;
-            state.correctCount = 0;
-            state.treesGreen = 0;
-            state.gameOver = false;
-            state.isAnswering = false;
-            state.questions = [];
-            state.fiftyUsed = false;
-
-document
-    .getElementById('fiftyFiftyBtn')
-    .classList.remove('used');
-            showTrees(false);
-            buildTrees();
-            showScreen('poster');
-            setupPosterMusic();
-        });
-
 // ============================================================
 //  KEYBOARD SHORTCUTS
 // ============================================================
