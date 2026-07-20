@@ -623,48 +623,75 @@
         }
 
 /* ----- END PAGE ----- */
+#end {
+    padding: 0;
+    background: #010b24;
+}
+
 #end .end-content {
-    text-align: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+
     display: flex;
-    flex-direction: column;
     align-items: center;
-    max-width: 760px;
+    justify-content: center;
+
+    overflow: hidden;
 }
 
-#end .end-icon {
-    font-size: clamp(4rem, 9vw, 7rem);
-    margin-bottom: 0.6rem;
-    animation: resultPop 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+/* Central completion image */
+#end .end-image {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    object-position: center;
+
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
-#end .end-title {
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 900;
-    letter-spacing: 4px;
-    color: #ffd700;
-    text-shadow:
-        0 0 30px rgba(255, 215, 0, 0.6),
-        0 0 70px rgba(255, 215, 0, 0.25);
-    margin-bottom: 0.8rem;
+/* Play Again button positioned over the image */
+#end .end-button-overlay {
+    position: absolute;
+    right: 40px;
+    bottom: 28px;
+    z-index: 10;
 }
 
-#end .end-message {
-    max-width: 620px;
-    margin-bottom: 2rem;
-    padding: 1.3rem 2rem;
-
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    line-height: 1.7;
-    color: #d0c8b8;
-
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 215, 0, 0.18);
-    border-radius: 18px;
-    backdrop-filter: blur(10px);
+#end .end-button-overlay .btn {
+    padding: 12px 30px;
+    font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+    white-space: nowrap;
 }
 
-#end .btn {
-    margin-top: 0.5rem;
+/* Responsive end page */
+@media (max-width: 768px) {
+    #end .end-button-overlay {
+        right: 24px;
+        bottom: 20px;
+    }
+
+    #end .end-button-overlay .btn {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #end .end-button-overlay {
+        right: 50%;
+        bottom: 14px;
+        transform: translateX(50%);
+    }
+
+    #end .end-button-overlay .btn {
+        padding: 9px 20px;
+        font-size: 0.8rem;
+    }
 }
         
 /* ----- 50:50 LIFELINE ----- */
@@ -966,29 +993,16 @@
 <!-- ===== END PAGE ===== -->
 <div class="screen" id="end">
     <div class="end-content">
-        <div class="end-icon">🌍</div>
+        end.png
 
-        <div class="end-title">
-            Thank You!
+        <div class="end-button-overlay">
+            <button class="btn" id="btnPlayAgain">
+                🔄 &nbsp;Play Again
+            </button>
         </div>
-
-        <div class="end-message">
-            Thank you for taking part in the Green Millionaire Challenge!
-            <br><br>
-            Every sustainable decision helps us grow a greener and more
-            responsible supply chain.
-            <br><br>
-            多謝你參與綠色百萬富翁挑戰！每一個可持續發展的決定，
-            都有助我們建立更環保及更負責任的供應鏈。
-        </div>
-
-        <button class="btn" id="btnPlayAgain">
-            🔄 &nbsp;Play Again
-        </button>
     </div>
 </div>
-    
-    <script>
+
 // ============================================================
 //  BACKGROUND MUSIC MANAGER
 // ============================================================
