@@ -625,7 +625,6 @@
 /* ----- END PAGE ----- */
 #end {
     padding: 0;
-    background: #010b24;
 }
 
 #end .end-content {
@@ -634,65 +633,37 @@
     position: relative;
 
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
 
     overflow: hidden;
 }
 
-/* Central completion image */
+/* Central end-page image */
 #end .end-image {
-    display: block;
-
     width: 100%;
     height: 100%;
-
     object-fit: contain;
-    object-position: center;
+    display: block;
 
+    pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
 }
 
-/* Play Again button positioned over the image */
-#end .end-button-overlay {
+/* Play Again button over the image */
+#end .end-button-wrap {
     position: absolute;
     right: 40px;
-    bottom: 28px;
+    bottom: 40px;
     z-index: 10;
 }
 
-#end .end-button-overlay .btn {
-    padding: 12px 30px;
-    font-size: clamp(0.9rem, 1.2vw, 1.2rem);
-    white-space: nowrap;
+#end .btn {
+    padding: 13px 39px;
+    font-size: clamp(1.2rem, 1.4vw, 2.2rem);
 }
-
-/* Responsive end page */
-@media (max-width: 768px) {
-    #end .end-button-overlay {
-        right: 24px;
-        bottom: 20px;
-    }
-
-    #end .end-button-overlay .btn {
-        padding: 10px 24px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    #end .end-button-overlay {
-        right: 50%;
-        bottom: 14px;
-        transform: translateX(50%);
-    }
-
-    #end .end-button-overlay .btn {
-        padding: 9px 20px;
-        font-size: 0.8rem;
-    }
-}
+`
         
 /* ----- 50:50 LIFELINE ----- */
 
@@ -789,6 +760,15 @@
             #final .final-stats {
                 padding: 1.2rem 2rem;
             }
+            #end .end-button-wrap {
+    right: 30px;
+    bottom: 30px;
+}
+
+#end .btn {
+    padding: 12px 32px;
+    font-size: 1rem;
+}
             #treeDisplay {
                 top: 12px;
                 right: 12px;
@@ -810,6 +790,15 @@
             }
         }
         @media (max-width: 480px) {
+            #end .end-button-wrap {
+    right: 20px;
+    bottom: 20px;
+}
+
+#end .btn {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+}
             #landing .game-title {
                 font-size: 2.4rem;
                 letter-spacing: 2px;
@@ -995,7 +984,7 @@
     <div class="end-content">
         end.png
 
-        <div class="end-button-overlay">
+        <div class="end-button-wrap">
             <button class="btn" id="btnPlayAgain">
                 🔄 &nbsp;Play Again
             </button>
